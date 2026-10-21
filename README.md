@@ -8,6 +8,7 @@ appointments, consultations and prescriptions, billing with printable bills.
 ```powershell
 cd hospital_project
 py -m pip install -r requirements.txt
+# one-time: create the database (see "PostgreSQL setup" below), then:
 py manage.py makemigrations hms
 py manage.py migrate   # run both again after updating, existing data is kept
 py manage.py setup_demo
@@ -35,7 +36,7 @@ New patients can also sign up at `/register/`.
 - Change the hospital name, phone, address, hours and tagline in `config/settings.py` (`HOSPITAL = {...}`).
 - Everything on the website is managed by the admin (no code changes): departments, doctors, home page hero banners and patient testimonials.
 - Doctors without an uploaded photo show a default picture: the woman picture for female doctors and the man picture for male doctors (set **Gender** on the doctor). The default disappears as soon as a photo is uploaded, by the admin (Website Manager > Doctors) or by the doctor after login (**My profile & photo**). Uploaded files are stored in `media/`. The default pictures are `hms/static/hms/img/doctor-male.jpg` and `doctor-female.jpg`.
-- Hero banners, department banners and the About page picture use built-in illustrations in `hms/static/hms/img/` until you upload your own (hero banner and department images in Website Manager; for the About page replace `emergency.webp`).
+- Hero banners, department banners and the About page picture use built-in illustrations in `hms/static/hms/img/` until you upload your own (hero banner and department images in Website Manager; for the About page replace `about-hospital.svg`).
 - The About and Contact pages use `established`, `beds` and `map_query` from `HOSPITAL` in `config/settings.py`. Edit them to your real details.
 - Messages sent from the Contact page form are saved and appear in Website Manager > Messages.
 
@@ -96,8 +97,24 @@ Receptionists are added in Website Manager > Receptionists.
 - `hms/views.py` all pages, `hms/roles.py` + `hms/decorators.py` role checks
 - `hms/templates/` HTML pages
 
+## PostgreSQL setup
+
+The project uses PostgreSQL (driver: `psycopg` 3). One-time setup:
+
+1. Install PostgreSQL and remember the password you set for the `postgres` user.
+2. Create the database, using `psql` or pgAdmin:
+   ```sql
+   CREATE DATABASE hospital_db;
+   ```
+3. Tell Django how to connect. In PowerShell, before running `manage.py`:
+   ```powershell
+   $env:DB_PASSWORD = "your-postgres-password"
+   ```
+   Optional overrides, with defaults: `DB_NAME=hospital_db`, `DB_USER=postgres`,
+   `DB_HOST=localhost`, `DB_PORT=5432`.
+4. Run `py manage.py makemigrations hms`, `py manage.py migrate` and `py manage.py setup_demo`.
+
 ## Before deploying anywhere real
 
-Set `DJANGO_SECRET_KEY`, set `DJANGO_DEBUG=0`, use HTTPS and a stronger database
-than SQLite, and remove the demo accounts. Real patient data is sensitive; check
+Set `DJANGO_SECRET_KEY`, set `DJANGO_DEBUG=0`, use HTTPS, use a strong database password (not the default), and remove the demo accounts. Real patient data is sensitive; check
 the privacy rules that apply to you.

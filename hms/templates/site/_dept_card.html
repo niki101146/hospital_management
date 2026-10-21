@@ -1,0 +1,11 @@
+{% load static %}<div class="tile dept-card2" data-name="{{ d.name|lower }}">
+  <div class="thumb"><img src="{% if d.image %}{{ d.image.url }}{% else %}{% static 'hms/img/dept-banner.svg' %}{% endif %}" alt="" loading="lazy"><span class="ico">{{ d.symbol }}</span></div>
+  <div class="body">
+    <h3><a href="{% url 'department_detail' d.pk %}">{{ d.name }}</a></h3>
+    <p>{{ d.description|default:"Expert diagnosis and treatment by experienced specialists."|truncatechars:110 }}</p>
+    <div class="foot">
+      <span>{{ d.doctor_count }} doctor{{ d.doctor_count|pluralize }}</span>
+      <span class="actions"><a class="btn small light" href="{% url 'doctors_public' %}?dept={{ d.pk }}">Doctors</a><a class="btn small" href="{% url 'department_detail' d.pk %}">Details</a></span>
+    </div>
+  </div>
+</div>

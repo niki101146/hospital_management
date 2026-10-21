@@ -1,0 +1,24 @@
+<section class="rb-stats">
+  <div class="rb-stat occ"><span>In rooms now</span><b>{{ counts.inhouse }}</b><small>checked-in patients</small></div>
+  <div class="rb-stat res"><span>Check-out due today</span><b>{{ counts.due_today }}</b><small>expected to leave today</small></div>
+  <div class="rb-stat all"><span>Overdue</span><b>{{ counts.overdue }}</b><small>stayed past expected date</small></div>
+</section>
+<div class="rb-card">
+<table>
+  <tr><th>Patient</th><th>Room</th><th>Checked in</th><th>Expected out</th><th>Stay so far</th><th>Charge so far</th><th></th></tr>
+  {% for b in bookings %}
+  <tr>
+    <td><div class="who-cell"><span class="av">{{ b.patient.name|slice:":1"|upper }}</span><div><b><a href="{% url 'patient_detail' b.patient.pk %}">{{ b.patient.name }}</a></b><small>{{ b.patient.patient_id }}{% if b.doctor %} &middot; {{ b.doctor }}{% endif %}</small></div></div></td>
+    <td><span class="rpill">{{ b.room.number }}</span><small>{{ b.room.get_room_type_display }}</small></td>
+    <td>{{ b.check_in|date:"d M Y" }}</td>
+    <td>{{ b.check_out|date:"d M Y" }} {% if b.overdue %}<span class="tag OVERDUE">Overdue</span>{% elif b.due_today %}<span class="tag DUE">Today</span>{% endif %}</td>
+    <td>{{ b.days_in }} day{{ b.days_in|pluralize }}</td>
+    <td>&#8377;{{ b.charge_so_far|floatformat:"-2" }}</td>
+    <td class="actions">
+      <form method="post" action="{% url 'room_booking_action' b.pk 'discharge' %}" onsubmit="return confirm('Check out {{ b.patient.name|escapejs }} from room {{ b.room.number|escapejs }}? Stay: {{ b.days_in }} day(s), charge so far {{ b.charge_so_far|floatformat:"-2" }}.');">{% csrf_token %}<input type="hidden" name="next" value="room_checkout"><button class="btn small" type="submit">Check out</button></form>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="muted" style="text-align:center;padding:34px">No patients are checked in right now.</td></tr>{% endfor %}
+</table>
+</div>
+<p class="rb-note">Charge so far = days stayed &times; the room's daily charge. The final amount is on the receipt after check-out.</p>

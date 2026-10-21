@@ -1,0 +1,49 @@
+<section class="rb-stats">
+  <div class="rb-stat free"><span>Available rooms</span><b>{{ free|length }}</b><small>for {{ start|date:"d M" }} &rarr; {{ end|date:"d M" }}</small></div>
+  <div class="rb-stat occ"><span>Not available</span><b>{{ busy|length }}</b><small>booked for these dates</small></div>
+  <div class="rb-stat all"><span>Length of stay</span><b>{{ nights }} night{{ nights|pluralize }}</b><small>{{ start|date:"D d M" }} to {{ end|date:"D d M" }}</small></div>
+</section>
+
+<h2>Available for your dates</h2>
+<div class="rb-grid">
+  {% for r in free %}
+  <article class="rcard">
+    <header>
+      <div><h3>Room {{ r.number }}</h3><span class="rtype t-{{ r.room_type }}">{{ r.get_room_type_display }}</span></div>
+      <div class="price">&#8377;{{ r.daily_charge|floatformat:"0" }}<small>per bed / day</small></div>
+    </header>
+    <div class="rfloor">{{ r.floor|default:"Floor not set" }}</div>
+    <div class="beds">{% for s in r.bed_states %}<span class="bed {{ s }}"><svg viewBox="0 0 30 20" aria-hidden="true"><rect x="1" y="9" width="28" height="8" rx="2"/><rect x="1" y="3" width="4" height="14" rx="1.5"/><rect x="7" y="5" width="9" height="5" rx="2.2"/><rect x="3" y="16" width="3" height="3" rx="1"/><rect x="24" y="16" width="3" height="3" rx="1"/></svg></span>{% endfor %}</div>
+    <div class="avail"><b>{{ r.free }}</b> of {{ r.beds }} bed{{ r.beds|pluralize }} free &middot; total <b>&#8377;{{ r.total|floatformat:"0" }}</b></div>
+    <footer><a class="btn small" href="{% url 'room_booking_create' %}?room={{ r.pk }}&check_in={{ start|date:'Y-m-d' }}&check_out={{ end|date:'Y-m-d' }}">Book this room</a></footer>
+  </article>
+  {% empty %}<div class="rb-card" style="grid-column:1/-1;padding:30px;text-align:center"><p class="muted" style="margin:0">No room is free for these dates. Try other dates or another room type.</p></div>{% endfor %}
+</div>
+
+{% if busy %}
+<h2>Booked for these dates</h2>
+<div class="rb-grid">
+  {% for r in busy %}
+  <article class="rcard busy">
+    <header>
+      <div><h3>Room {{ r.number }}</h3><span class="rtype t-{{ r.room_type }}">{{ r.get_room_type_display }}</span></div>
+      <div class="price">&#8377;{{ r.daily_charge|floatformat:"0" }}<small>per bed / day</small></div>
+    </header>
+    <div class="beds">{% for s in r.bed_states %}<span class="bed {{ s }}"><svg viewBox="0 0 30 20" aria-hidden="true"><rect x="1" y="9" width="28" height="8" rx="2"/><rect x="1" y="3" width="4" height="14" rx="1.5"/><rect x="7" y="5" width="9" height="5" rx="2.2"/><rect x="3" y="16" width="3" height="3" rx="1"/><rect x="24" y="16" width="3" height="3" rx="1"/></svg></span>{% endfor %}</div>
+    <div class="avail"><b>Not available</b> &middot; next free from <b>{{ r.free_from|date:"d M" }}</b></div>
+    <footer><a class="btn small light" href="{% url 'room_booking_create' %}?room={{ r.pk }}&check_in={{ r.free_from|date:'Y-m-d' }}">Book from {{ r.free_from|date:"d M" }}</a></footer>
+  </article>
+  {% endfor %}
+</div>
+{% endif %}
+
+<h2>Next 14 days</h2>
+<div class="rb-card cal-wrap">
+<table class="cal">
+  <tr><th class="rn">Room</th>{% for d in days %}<th class="{% if d.sel %}sel{% endif %}{% if d.today %} today{% endif %}">{{ d.date|date:"d" }}<small>{{ d.date|date:"D" }}</small></th>{% endfor %}</tr>
+  {% for row in chart %}
+  <tr><td class="rn"><b>{{ row.room.number }}</b><small>{{ row.room.get_room_type_display }}</small></td>{% for c in row.cells %}<td class="c {{ c.state }}{% if c.sel %} sel{% endif %}" {% if c.names %}title="{{ c.names }}"{% endif %}></td>{% endfor %}</tr>
+  {% endfor %}
+</table>
+</div>
+<div class="rb-legend" style="margin-top:10px"><span><i class="free"></i>Free</span><span><i class="res"></i>Partly booked</span><span><i class="occ"></i>Booked</span><span class="muted">Hover a booked day to see the patient. Outlined columns are your selected dates.</span></div>

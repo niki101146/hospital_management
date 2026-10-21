@@ -1,0 +1,36 @@
+{% extends "site/base.html" %}{% load static %}
+{% block title %}{{ doctor }}{% endblock %}
+{% block page %}
+<section class="page-hero ph3"><div class="container">
+  <h1>{{ doctor }}</h1><p>{{ doctor.specialization|default:doctor.department.name }}</p>
+</div></section>
+
+<section class="block"><div class="container">
+  <div class="profile">
+    <div class="pic">{% if doctor.photo %}<img src="{{ doctor.photo.url }}" alt="{{ doctor }}">{% else %}<img class="ph" src="{% static doctor.placeholder %}" alt="{{ doctor }}">{% endif %}</div>
+    <div>
+      <h2>{{ doctor }}</h2>
+      <div class="muted">{{ doctor.qualification }}</div>
+      <p style="margin:8px 0 0"><a class="pill on" href="{% url 'department_detail' doctor.department.pk %}">{{ doctor.department.name }}</a></p>
+      <div class="info-grid">
+        <div><small>Speciality</small><b>{{ doctor.specialization|default:"General practice" }}</b></div>
+        <div><small>Experience</small><b>{% if doctor.experience_years %}{{ doctor.experience_years }} year{{ doctor.experience_years|pluralize }}{% else %}-{% endif %}</b></div>
+        <div><small>Available</small><b>{{ doctor.available_days|default:"Ask reception" }}</b></div>
+        <div><small>Timings</small><b>{{ doctor.timings|default:"Ask reception" }}</b></div>
+        <div><small>Consultation fee</small><b>&#8377;{{ doctor.consultation_fee|floatformat:"0" }}</b></div>
+      </div>
+      {% if doctor.bio %}<h3 style="color:var(--brand-dark);margin-bottom:6px">About</h3><p class="muted">{{ doctor.bio|linebreaksbr }}</p>{% endif %}
+      <p><a class="btn" href="{{ book_url }}">Book an Appointment</a></p>
+    </div>
+  </div>
+</div></section>
+
+{% if colleagues %}
+<section class="block alt"><div class="container">
+  <div class="sec-head"><small>Same department</small><h2>Other doctors in {{ doctor.department.name }}</h2></div>
+  <div class="grid c3">
+    {% for d in colleagues %}{% include "site/_doctor_card.html" %}{% endfor %}
+  </div>
+</div></section>
+{% endif %}
+{% endblock %}

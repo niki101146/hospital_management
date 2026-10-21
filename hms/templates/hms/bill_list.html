@@ -1,0 +1,50 @@
+{% extends base_template %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'hms/bills.css' %}">
+<div class="rb-head">
+  <div><h1>Bills &amp; payments</h1><p class="rb-sub">Track what has been collected and what is still waiting for payment.</p></div>
+</div>
+
+<section class="bl-stats">
+  <div class="bl-stat all"><span>Total billed</span><b>&#8377;{{ stats.billed|floatformat:"2" }}</b><small>{{ stats.count }} bill{{ stats.count|pluralize }}</small></div>
+  <div class="bl-stat paid"><span>Collected (paid)</span><b>&#8377;{{ stats.paid_amount|floatformat:"2" }}</b><small>{{ stats.paid_count }} paid bill{{ stats.paid_count|pluralize }}</small></div>
+  <div class="bl-stat pend"><span>Outstanding (pending)</span><b>&#8377;{{ stats.pending_amount|floatformat:"2" }}</b><small>{{ stats.pending_count }} waiting for payment</small></div>
+  <div class="bl-stat rate"><span>Collection rate</span><b>{{ stats.rate }}%</b><div class="bl-meter"><span style="width:{{ stats.rate }}%"></span></div></div>
+</section>
+
+<div class="bl-bar">
+  <div class="bl-tabs">
+    <a class="{% if show == 'all' %}on{% endif %}" href="?show=all{% if q %}&q={{ q|urlencode }}{% endif %}">All <em>{{ stats.count }}</em></a>
+    <a class="{% if show == 'pending' %}on{% endif %}" href="?show=pending{% if q %}&q={{ q|urlencode }}{% endif %}">Pending <em>{{ stats.pending_count }}</em></a>
+    <a class="{% if show == 'paid' %}on{% endif %}" href="?show=paid{% if q %}&q={{ q|urlencode }}{% endif %}">Paid <em>{{ stats.paid_count }}</em></a>
+  </div>
+  <form method="get" class="bl-search"><input type="hidden" name="show" value="{{ show }}">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search patient, doctor or bill no." aria-label="Search bills"></form>
+</div>
+
+<div class="rb-card">
+<table class="bl-table">
+  <tr><th>Bill #</th><th>Date</th><th>Patient</th><th>Doctor</th><th class="num">Consultation</th><th class="num">Other</th><th class="num">Total</th><th>Status</th><th></th></tr>
+  {% for b in bills %}
+  <tr>
+    <td><b>#{{ b.pk }}</b></td>
+    <td>{{ b.created_at|date:"d M Y" }}{% if b.payment_status == "PAID" %}<small>Paid {{ b.paid_when|date:"d M Y" }}</small>{% endif %}</td>
+    <td><div class="who-cell"><span class="av">{{ b.appointment.patient.name|slice:":1"|upper }}</span><div><b>{{ b.appointment.patient.name }}</b><small>{{ b.appointment.patient.patient_id }}</small></div></div></td>
+    <td>{{ b.appointment.doctor }}</td>
+    <td class="num">&#8377;{{ b.consultation_fee }}</td>
+    <td class="num">&#8377;{{ b.other_charges }}</td>
+    <td class="num"><b>&#8377;{{ b.total }}</b></td>
+    <td><span class="tag {{ b.payment_status }}">{% if b.payment_status == "PAID" %}&#10003; {% else %}&#9679; {% endif %}{{ b.get_payment_status_display }}</span></td>
+    <td class="actions">
+      {% if b.payment_status == "PENDING" %}
+      <form method="post" action="{% url 'bill_mark_paid' b.pk %}">{% csrf_token %}<button class="btn small" type="submit">Mark paid</button></form>
+      {% endif %}
+      <a class="btn small light" href="{% url 'bill_detail' b.pk %}">View</a>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="9" class="empty">No {% if show != 'all' %}{{ show }} {% endif %}bills found.</td></tr>{% endfor %}
+</table>
+</div>
+{% endblock %}

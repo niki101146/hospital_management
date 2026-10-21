@@ -1,0 +1,57 @@
+{% extends "site/base.html" %}
+{% block title %}Contact{% endblock %}
+{% block page %}
+<section class="page-hero ph3"><div class="container">
+  <h1>Contact Us</h1><p>We are here to help, any time of day. Reach out and our team will respond quickly.</p>
+</div></section>
+
+<div class="container"><div class="info-cards">
+  <div class="item"><div class="icon">&#128205;</div><b>Address</b><span>{{ hospital.address }}</span></div>
+  <div class="item"><div class="icon">&#9742;</div><b>Reception</b><span>{{ hospital.phone }}</span></div>
+  <div class="item"><div class="icon">&#128657;</div><b>Emergency (24/7)</b><span>{{ hospital.emergency }}</span></div>
+  <div class="item"><div class="icon">&#9993;</div><b>Email &amp; hours</b><span>{{ hospital.email }}<br>{{ hospital.hours }}</span></div>
+</div></div>
+
+<section class="block alt" style="margin-top:40px"><div class="container">
+  <div class="contact-split">
+    <div class="card">
+      <h2 style="margin:0 0 4px;color:var(--brand-dark)">Send us a message</h2>
+      <p class="muted" style="margin:0 0 18px">Questions about appointments, departments or billing? Write to us.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-row">
+          <p>{{ form.name.errors }}<label for="{{ form.name.id_for_label }}">Your name</label>{{ form.name }}</p>
+          <p>{{ form.email.errors }}<label for="{{ form.email.id_for_label }}">Email</label>{{ form.email }}</p>
+        </div>
+        <div class="form-row">
+          <p>{{ form.phone.errors }}<label for="{{ form.phone.id_for_label }}">Phone</label>{{ form.phone }}</p>
+          <p>{{ form.subject.errors }}<label for="{{ form.subject.id_for_label }}">Subject</label>{{ form.subject }}</p>
+        </div>
+        <p>{{ form.message.errors }}<label for="{{ form.message.id_for_label }}">Message</label>{{ form.message }}</p>
+        <button class="btn" type="submit">Send message</button>
+      </form>
+    </div>
+    <div class="map-box">
+      <iframe title="Hospital location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q={{ hospital.map_query|urlencode }}&amp;output=embed"></iframe>
+    </div>
+  </div>
+</div></section>
+
+<section class="block"><div class="container" style="max-width:820px">
+  <div class="sec-head"><small>FAQ</small><h2>Frequently asked questions</h2></div>
+  <div class="faq">
+    <details><summary>How do I book an appointment?</summary><p>Create a free patient account, choose a department and doctor, then pick a date and time. You can also call our reception on {{ hospital.phone }}.</p></details>
+    <details><summary>What are your visiting hours?</summary><p>{{ hospital.hours }}. Emergency services are available 24/7.</p></details>
+    <details><summary>Can I see my prescriptions and bills online?</summary><p>Yes. After each consultation your prescription and bills appear in your patient account.</p></details>
+    <details><summary>What should I do in an emergency?</summary><p>Call {{ hospital.emergency }} immediately or come straight to our emergency department.</p></details>
+  </div>
+</div></section>
+
+<section class="emergency-band"><div class="container">
+  <div><b>Medical emergency?</b><br><span style="color:#e8c4ca">Do not wait for an appointment.</span></div>
+  <div>&#128657; Call <b class="num">{{ hospital.emergency }}</b></div>
+  <a class="btn white" href="{{ book_url }}">Book an Appointment</a>
+</div></section>
+{% endblock %}

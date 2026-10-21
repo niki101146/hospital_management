@@ -1,0 +1,197 @@
+{% extends "site/base.html" %}
+{% block title %}Home{% endblock %}
+{% block page %}
+
+<section class="slider" id="hero" aria-roledescription="carousel" aria-label="Highlights">
+  <div class="slides">
+    {% for s in slides %}
+    <div class="slide {% cycle 't0' 't1' 't2' %}{% if s.image %} photo{% endif %}{% if forloop.first %} active{% endif %}"
+         {% if s.image %}style="background-image:url('{{ s.image.url }}')"{% endif %}>
+      <div class="container">
+        {% if s.badge %}<span class="eyebrow">{{ s.badge }}</span>{% endif %}
+        <h1>{{ s.title }}</h1>
+        {% if s.subtitle %}<p class="lead">{{ s.subtitle }}</p>{% endif %}
+        <div class="cta">
+          {% if s.button_text %}<a class="btn white" href="{{ s.button_link|default:book_url }}">{{ s.button_text }}</a>{% endif %}
+          {% if s.second_button_text %}<a class="btn ghost" href="{{ s.second_button_link|default:'/doctors/' }}">{{ s.second_button_text }}</a>{% endif %}
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="slide t0 active">
+      <div class="container">
+        <span class="eyebrow">&#10010; Trusted healthcare, close to home</span>
+        <h1>Your health, in <br>caring hands.</h1>
+        <p class="lead">{{ hospital.tagline }}</p>
+        <div class="cta">
+          <a class="btn white" href="{{ book_url }}">Book an Appointment</a>
+          <a class="btn ghost" href="{% url 'doctors_public' %}">Meet our Doctors</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if slides|length > 1 %}
+  <button class="sl-arrow sl-prev" type="button" aria-label="Previous slide">&#8249;</button>
+  <button class="sl-arrow sl-next" type="button" aria-label="Next slide">&#8250;</button>
+  <div class="sl-dots">{% for s in slides %}<button type="button" aria-label="Go to slide {{ forloop.counter }}" class="{% if forloop.first %}on{% endif %}"></button>{% endfor %}</div>
+  {% endif %}
+</section>
+
+<div class="finder-wrap"><div class="container">
+  <form class="finder" action="{% url 'doctors_public' %}" method="get">
+    <b>&#9877; Find a doctor</b>
+    <input type="text" name="q" placeholder="Doctor name or speciality" aria-label="Doctor name or speciality">
+    <select name="dept" aria-label="Department">
+      <option value="">All departments</option>
+      {% for d in finder_departments %}<option value="{{ d.pk }}">{{ d.name }}</option>{% endfor %}
+    </select>
+    <button class="btn" type="submit">Search</button>
+  </form>
+</div></div>
+
+{% if role == "patient" %}
+<div class="welcome-strip" style="margin-top:26px"><div class="container">
+  <b>Welcome back, {{ user.first_name|default:user.username }}.</b>
+  {% for a in upcoming %}<span>&#128197; {{ a.date|date:"D, d M" }} at {{ a.time|time:"h:i A" }} with {{ a.doctor }}</span>{% empty %}<span class="muted">You have no upcoming appointments.</span>{% endfor %}
+  <span class="actions" style="margin-left:auto">
+    <a class="btn small" href="{% url 'portal_book' %}">Book an Appointment</a>
+    <a class="btn small light" href="{% url 'portal_appointments' %}">My appointments</a>
+  </span>
+</div></div>
+{% endif %}
+
+<section class="stats-strip" style="margin-top:16px"><div class="container">
+  <div><b>{{ doctor_total }}+</b><span>Specialist doctors</span></div>
+  <div><b>{{ department_total }}</b><span>Departments</span></div>
+  <div><b>{{ patient_total }}+</b><span>Registered patients</span></div>
+  <div><b>24/7</b><span>Emergency care</span></div>
+</div></section>
+
+<section class="block alt dept-section"><div class="container">
+  <div class="sec-head"><small>Our specialities</small><h2>Departments &amp; centres of care</h2><p>Select a department to see its doctors.</p></div>
+  <div class="dept-chips">
+    {% for d in departments %}
+    <a class="dept-chip" href="{% url 'doctors_public' %}?dept={{ d.pk }}" title="View doctors in {{ d.name }}">
+      <span class="icon">{{ d.symbol }}</span>
+      <span class="nm">{{ d.name }}</span>
+    </a>
+    {% empty %}<p class="muted">Departments will appear here once they are added in the Website Manager.</p>{% endfor %}
+  </div>
+  {% if department_total > 8 %}<div class="center"><a class="btn light" href="{% url 'departments' %}">View all {{ department_total }} departments</a></div>{% endif %}
+</div></section>
+
+<section class="block"><div class="container">
+  <div class="sec-head"><small>Meet the team</small><h2>Our specialist doctors</h2><p>Experienced, qualified and committed to your recovery.</p></div>
+  <div class="docs lg dcar" id="dcar">
+    <div class="dcar-track">
+      {% for d in doctors %}<div class="dslide">{% include "site/_doctor_card.html" %}</div>
+      {% empty %}<p class="muted" style="padding:0 20px">Doctors will appear here once they are added from the Website Manager.</p>{% endfor %}
+    </div>
+  </div>
+  {% if doctors|length > 1 %}
+  <div class="dcar-nav">
+    <button class="arrow" id="dcarPrev" type="button" aria-label="Previous doctor">&#8249;</button>
+    <div class="dcar-dots" id="dcarDots"></div>
+    <button class="arrow" id="dcarNext" type="button" aria-label="Next doctor">&#8250;</button>
+  </div>
+  {% endif %}
+  <div class="center"><a class="btn light" href="{% url 'doctors_public' %}">View all doctors</a></div>
+</div></section>
+
+<section class="block alt"><div class="container">
+  <div class="sec-head"><small>Why choose us</small><h2>Care you can trust</h2></div>
+  <div class="grid c4">
+    <div class="tile"><div class="icon">&#9877;</div><h3>Experienced doctors</h3><p>Qualified specialists focused on your recovery.</p></div>
+    <div class="tile"><div class="icon">&#128337;</div><h3>Easy online booking</h3><p>Pick a slot in under a minute, any time of day.</p></div>
+    <div class="tile"><div class="icon">&#128196;</div><h3>Digital records</h3><p>See prescriptions, reports and bills online.</p></div>
+    <div class="tile"><div class="icon">&#128657;</div><h3>24/7 emergency</h3><p>Round-the-clock emergency support: {{ hospital.emergency }}.</p></div>
+  </div>
+</div></section>
+
+<section class="block"><div class="container">
+  <div class="sec-head"><small>How it works</small><h2>Book in 3 easy steps</h2></div>
+  <div class="grid c3">
+    <div class="step"><div class="num">1</div><h3>Create your account</h3><p class="muted">Register free as a patient in under a minute.</p></div>
+    <div class="step"><div class="num">2</div><h3>Choose doctor &amp; time</h3><p class="muted">Pick a department, a specialist, a date and a slot.</p></div>
+    <div class="step"><div class="num">3</div><h3>Visit &amp; get your records</h3><p class="muted">Prescriptions and bills appear in your account.</p></div>
+  </div>
+</div></section>
+
+{% if testimonials %}
+<section class="block alt"><div class="container">
+  <div class="sec-head"><small>Patient stories</small><h2>What our patients say</h2></div>
+  <div class="grid c3">
+    {% for t in testimonials %}
+    <div class="tile quote">
+      <div class="stars" aria-label="{{ t.rating }} out of 5">{% for i in "12345" %}{% if forloop.counter <= t.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+      <p>&ldquo;{{ t.message }}&rdquo;</p>
+      <div class="who"><span class="avatar">{{ t.name|slice:":1" }}</span><div><b>{{ t.name }}</b>{% if t.designation %}<small>{{ t.designation }}</small>{% endif %}</div></div>
+    </div>
+    {% endfor %}
+  </div>
+</div></section>
+{% endif %}
+
+<section class="emergency-band"><div class="container">
+  <div><b>Medical emergency?</b><br><span style="color:#e8c4ca">Our emergency team is available day and night.</span></div>
+  <div class="num-wrap">&#128657; Call <b class="num">{{ hospital.emergency }}</b></div>
+  <a class="btn white" href="{{ book_url }}">Book an Appointment</a>
+</div></section>
+
+<script>
+(function () {
+  var car = document.getElementById("dcar");
+  if (!car) return;
+  var track = car.querySelector(".dcar-track"), slides = [].slice.call(track.querySelectorAll(".dslide")),
+      dots = document.getElementById("dcarDots"), i = 0, timer = null;
+  if (!slides.length) return;
+  if (dots) slides.forEach(function (_, n) {
+    var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", "Show doctor " + (n + 1));
+    b.addEventListener("click", function () { go(n); restart(); }); dots.appendChild(b);
+  });
+  function go(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach(function (s, k) { s.classList.toggle("active", k === i); if (dots) dots.children[k].classList.toggle("on", k === i); });
+    var s = slides[i];
+    track.style.transform = "translateX(" + (car.clientWidth / 2 - (s.offsetLeft + s.offsetWidth / 2)) + "px)";
+  }
+  function restart() { stop(); if (slides.length > 1) timer = setInterval(function () { go(i + 1); }, 4000); }
+  function stop() { if (timer) clearInterval(timer); timer = null; }
+  slides.forEach(function (s, k) {  // clicking a side card brings it to the centre
+    s.addEventListener("click", function (e) { if (k !== i) { e.preventDefault(); e.stopPropagation(); go(k); restart(); } }, true);
+  });
+  var prev = document.getElementById("dcarPrev"), next = document.getElementById("dcarNext");
+  if (prev) prev.addEventListener("click", function () { go(i - 1); restart(); });
+  if (next) next.addEventListener("click", function () { go(i + 1); restart(); });
+  var x0 = null;  // swipe on touch screens
+  car.addEventListener("pointerdown", function (e) { x0 = e.clientX; });
+  car.addEventListener("pointerup", function (e) { if (x0 !== null && Math.abs(e.clientX - x0) > 50) { go(i + (e.clientX < x0 ? 1 : -1)); restart(); } x0 = null; });
+  window.addEventListener("resize", function () { go(i); });
+  window.addEventListener("load", function () { go(i); });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else restart(); });
+  go(0); restart();
+})();
+</script>
+<script>
+(function () {
+  var root = document.getElementById("hero");
+  var slides = root.querySelectorAll(".slide");
+  if (slides.length < 2) return;
+  var dots = root.querySelectorAll(".sl-dots button");
+  var i = 0, timer = null;
+  function show(n) {
+    slides[i].classList.remove("active"); dots[i].classList.remove("on");
+    i = (n + slides.length) % slides.length;
+    slides[i].classList.add("active"); dots[i].classList.add("on");
+  }
+  function start() { stop(); timer = setInterval(function () { show(i + 1); }, 5000); }
+  function stop() { if (timer) clearInterval(timer); timer = null; }
+  root.querySelector(".sl-prev").addEventListener("click", function () { show(i - 1); start(); });
+  root.querySelector(".sl-next").addEventListener("click", function () { show(i + 1); start(); });
+  dots.forEach(function (d, n) { d.addEventListener("click", function () { show(n); start(); }); });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) { stop(); } else { start(); } });
+  start();
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "panel/base.html" %}
+{% block title %}Overview{% endblock %}
+{% block heading %}Overview{% endblock %}
+{% block subhint %}<div class="hint">Manage everything visitors see on your website.</div>{% endblock %}
+{% block topactions %}<a class="btn light small" href="{% url 'home' %}" target="_blank" rel="noopener">View website &#8599;</a>{% endblock %}
+{% block content %}
+<div class="stats">
+  {% for s in stats %}<a class="stat" href="{% url 'panel_list' s.key %}"><b>{{ s.count }}</b><span>{{ s.label }}</span></a>{% endfor %}
+  <a class="stat" href="{% url 'panel_list' 'messages' %}"><b>{{ unread }}</b><span>New messages</span></a>
+</div>
+
+<div class="card">
+  <h2>Quick add</h2>
+  <div class="quick">
+    <a class="btn" href="{% url 'panel_add' 'departments' %}">+ Department</a>
+    <a class="btn" href="{% url 'panel_add' 'doctors' %}">+ Doctor</a>
+    <a class="btn" href="{% url 'panel_add' 'slides' %}">+ Hero banner</a>
+    <a class="btn" href="{% url 'panel_add' 'testimonials' %}">+ Testimonial</a>
+    <a class="btn light" href="{% url 'panel_add' 'receptionists' %}">+ Receptionist</a>
+  </div>
+  <p class="muted" style="margin-bottom:0">Anything you add or change here appears on the public website straight away.</p>
+</div>
+
+<div class="card">
+  <h2>Recent messages</h2>
+  {% for m in recent %}
+  <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)">
+    <div><b>{{ m.name }}</b> <span class="muted">&middot; {{ m.subject }}</span></div>
+    <div><span class="pill-s {% if not m.is_read %}on{% endif %}">{% if m.is_read %}Read{% else %}New{% endif %}</span> <a class="btn small light" href="{% url 'panel_message' m.pk %}">Open</a></div>
+  </div>
+  {% empty %}<p class="muted" style="margin:0">No messages yet.</p>{% endfor %}
+</div>
+{% endblock %}

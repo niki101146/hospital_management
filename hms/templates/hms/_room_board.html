@@ -1,0 +1,39 @@
+<section class="rb-stats">
+  <div class="rb-stat all"><span>Occupancy</span><b>{{ stats.pct }}%</b><div class="meter"><span style="width:{{ stats.pct }}%"></span></div></div>
+  <div class="rb-stat free"><span>Available beds</span><b>{{ stats.free }}</b><small>of {{ stats.beds }} beds in {{ stats.rooms }} rooms</small></div>
+  <div class="rb-stat res"><span>Reserved (arriving)</span><b>{{ stats.reserved }}</b><small>booked, not yet checked in</small></div>
+  <div class="rb-stat occ"><span>Occupied</span><b>{{ stats.occupied }}</b><small>patients checked in</small></div>
+</section>
+
+<div class="rb-bar">
+  <div class="rb-chips">
+    <button type="button" class="chip" data-type="">All rooms</button>
+    {% for code, label in room_types %}<button type="button" class="chip" data-type="{{ code }}">{{ label }}</button>{% endfor %}
+  </div>
+  <div class="rb-legend"><span><i class="free"></i>Available</span><span><i class="res"></i>Reserved</span><span><i class="occ"></i>Occupied</span></div>
+</div>
+
+<div class="rb-grid">
+  {% for r in rooms %}
+  <article class="rcard {% if not r.is_active %}off{% endif %}" data-type="{{ r.room_type }}">
+    <header>
+      <div><h3>Room {{ r.number }}</h3><span class="rtype t-{{ r.room_type }}">{{ r.get_room_type_display }}</span></div>
+      <div class="price">&#8377;{{ r.daily_charge|floatformat:"0" }}<small>per bed / day</small></div>
+    </header>
+    <div class="rfloor">{{ r.floor|default:"Floor not set" }}</div>
+    <div class="beds">{% for s in r.bed_states %}<span class="bed {{ s }}" title="{% if s == 'free' %}Available{% elif s == 'res' %}Reserved{% else %}Occupied{% endif %}"><svg viewBox="0 0 30 20" aria-hidden="true"><rect x="1" y="9" width="28" height="8" rx="2"/><rect x="1" y="3" width="4" height="14" rx="1.5"/><rect x="7" y="5" width="9" height="5" rx="2.2"/><rect x="3" y="16" width="3" height="3" rx="1"/><rect x="24" y="16" width="3" height="3" rx="1"/></svg></span>{% endfor %}</div>
+    <div class="avail">{% if not r.is_active %}Closed for bookings{% elif r.free %}<b>{{ r.free }}</b> of {{ r.beds }} bed{{ r.beds|pluralize }} available{% else %}<b>Fully occupied</b>{% endif %}</div>
+    {% if r.admitted or r.due %}
+    <ul class="who">
+      {% for b in r.admitted %}<li><i class="d occ"></i>{{ b.patient.name }}<small>until {{ b.check_out|date:"d M" }}</small></li>{% endfor %}
+      {% for b in r.due %}<li><i class="d res"></i>{{ b.patient.name }}<small>arriving</small></li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% if r.upcoming %}<div class="next">Next arrival {{ r.upcoming.0.check_in|date:"d M" }}{% if r.upcoming|length > 1 %} &middot; {{ r.upcoming|length }} upcoming{% endif %}</div>{% endif %}
+    <footer>
+      {% if r.is_active %}<a class="btn small" href="{% url 'room_booking_create' %}?room={{ r.pk }}">Book</a>{% endif %}
+      <a class="btn small light" href="{% url 'room_edit' r.pk %}">Edit</a>
+    </footer>
+  </article>
+  {% empty %}<div class="rb-card" style="grid-column:1/-1;padding:40px;text-align:center" ><p class="muted">No rooms yet. Use <b>+ Add room</b> to create your first room.</p></div>{% endfor %}
+</div>

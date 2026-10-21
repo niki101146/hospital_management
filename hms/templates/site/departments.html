@@ -1,0 +1,44 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block title %}Departments{% endblock %}
+{% block page %}
+<section class="page-hero my-banner mb-dept"><div class="container">
+  <h1>Our Departments</h1><p>Complete, coordinated care under one roof, delivered by dedicated specialists.</p>
+</div></section>
+
+<div class="container"><div class="intro-band">
+  <div class="item"><div class="icon">&#10010;</div><div><b>{{ departments|length }} specialities</b><span>From primary care to advanced treatment</span></div></div>
+  <div class="item"><div class="icon">&#9877;</div><div><b>Experienced specialists</b><span>Qualified, caring doctors in every unit</span></div></div>
+  <div class="item"><div class="icon">&#128657;</div><div><b>24/7 emergency</b><span>Call {{ hospital.emergency }} any time</span></div></div>
+</div></div>
+
+<section class="block alt" style="min-height:50vh;margin-top:40px"><div class="container">
+  <div class="filter-row">
+    <input id="deptSearch" type="search" placeholder="Search departments" aria-label="Search departments" style="max-width:340px;width:100%;padding:11px 16px;border:1px solid #e0cfd2;border-radius:999px;font:inherit">
+    <span class="count"><span id="deptCount">{{ departments|length }}</span> departments</span>
+  </div>
+  <div class="grid c3" id="deptGrid">
+    {% for d in departments %}{% include "site/_dept_card.html" %}
+    {% empty %}<p class="muted">Departments will appear here once they are added from the admin site.</p>{% endfor %}
+  </div>
+  <p class="muted" id="deptNone" style="display:none;text-align:center">No department matches your search.</p>
+</div></section>
+
+<section class="cta-band">
+  <h2>Not sure which department you need?</h2>
+  <p>Call our reception and we will guide you to the right specialist.</p>
+  <a class="btn white" href="{% url 'contact' %}">Contact us</a>
+</section>
+<script>
+(function () {
+  var box = document.getElementById("deptSearch"), cards = document.querySelectorAll("#deptGrid .dept-card2");
+  if (!box) return;
+  box.addEventListener("input", function () {
+    var q = box.value.trim().toLowerCase(), n = 0;
+    cards.forEach(function (c) { var ok = c.dataset.name.indexOf(q) !== -1; c.style.display = ok ? "" : "none"; if (ok) n++; });
+    document.getElementById("deptCount").textContent = n;
+    document.getElementById("deptNone").style.display = n ? "none" : "block";
+  });
+})();
+</script>
+{% endblock %}

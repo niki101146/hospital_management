@@ -1,0 +1,26 @@
+{% extends "hms/base.html" %}
+{% block title %}Patients{% endblock %}
+{% block content %}
+<h1>Patients</h1>
+<form class="toolbar" method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="Search name, patient ID or phone">
+  <button class="btn" type="submit">Search</button>
+  <a class="btn light" href="{% url 'patient_create' %}">+ Register patient</a>
+</form>
+<table>
+  <tr><th>ID</th><th>Name</th><th>Gender</th><th>Phone</th><th>Registered</th><th></th></tr>
+  {% for p in patients %}
+  <tr>
+    <td>{{ p.patient_id }}</td>
+    <td><a href="{% url 'patient_detail' p.pk %}">{{ p.name }}</a></td>
+    <td>{{ p.get_gender_display }}</td>
+    <td>{{ p.phone }}</td>
+    <td>{{ p.registered_on|date:"d M Y" }}</td>
+    <td class="actions">
+      <a class="btn small light" href="{% url 'patient_edit' p.pk %}">Edit</a>
+      <a class="btn small" href="{% url 'appointment_create' %}?patient={{ p.pk }}">Book</a>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="6" class="muted">No patients found.</td></tr>{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends base_template %}
+{% load static %}
+{% block title %}Available rooms{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'hms/rooms.css' %}">
+<div class="rb-head">
+  <div><h1>Available rooms</h1><p class="rb-sub">Choose the stay dates to see which rooms are free. A room is only unavailable for the dates it is booked.</p></div>
+  <div class="rb-actions">
+    <span class="live" id="live"><i></i>Live <small id="liveTime"></small></span>
+    <a class="btn" href="{% url 'room_booking_create' %}">+ Book room</a>
+  </div>
+</div>
+<form method="get" class="rb-filter" id="liveForm">
+  <div class="field"><label for="f_in">Check-in</label><input type="date" id="f_in" name="check_in" value="{{ start|date:'Y-m-d' }}" min="{{ today|date:'Y-m-d' }}"></div>
+  <div class="field"><label for="f_out">Check-out</label><input type="date" id="f_out" name="check_out" value="{{ end|date:'Y-m-d' }}" min="{{ today|date:'Y-m-d' }}"></div>
+  <div class="field"><label for="f_type">Room type</label>
+    <select id="f_type" name="type"><option value="">All types</option>{% for code, label in room_types %}<option value="{{ code }}" {% if rtype == code %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+  <button class="btn" type="submit">Search</button>
+</form>
+<div id="board" class="rb-live-box" data-live data-url="{% url 'room_available' %}?partial=1">{% include "hms/_room_available.html" %}</div>
+<script src="{% static 'hms/rooms.js' %}"></script>
+{% endblock %}

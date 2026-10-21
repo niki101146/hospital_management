@@ -1,0 +1,37 @@
+{% extends base_template %}
+{% block title %}Fees collection{% endblock %}
+{% block content %}
+<h1>Fees collection</h1>
+<div class="stats">
+  <div class="stat"><b>{{ totals.patients }}</b><span>{% if role == "doctor" %}My patients{% else %}Total patients (all doctors){% endif %}</span></div>
+  <div class="stat"><b>&#8377;{{ totals.today|floatformat:"-2" }}</b><span>Today's earning</span></div>
+  <div class="stat"><b>&#8377;{{ totals.total|floatformat:"-2" }}</b><span>Total earning</span></div>
+</div>
+
+{% if role == "admin" %}
+<h2>Earnings by doctor</h2>
+<table>
+  <tr><th>Doctor</th><th>Department</th><th>Total patients</th><th>Today's earning</th><th>Total earning</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r.doctor }}</td><td>{{ r.doctor.department.name }}</td>
+    <td>{{ r.patients }}</td><td>&#8377;{{ r.today|floatformat:"-2" }}</td><td>&#8377;{{ r.total|floatformat:"-2" }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="5" class="muted">No doctors yet.</td></tr>{% endfor %}
+  {% if rows %}<tr><th colspan="2">Total</th><th>{{ totals.patients }}</th><th>&#8377;{{ totals.today|floatformat:"-2" }}</th><th>&#8377;{{ totals.total|floatformat:"-2" }}</th></tr>{% endif %}
+</table>
+{% endif %}
+
+<h2>Recent fee collections</h2>
+<table>
+  <tr><th>Date</th><th>Patient</th>{% if role == "admin" %}<th>Doctor</th>{% endif %}<th>Consultation fee</th></tr>
+  {% for b in recent %}
+  <tr>
+    <td>{{ b.paid_when|date:"d M Y" }}</td><td>{{ b.appointment.patient.name }}</td>
+    {% if role == "admin" %}<td>{{ b.appointment.doctor }}</td>{% endif %}
+    <td>&#8377;{{ b.consultation_fee|floatformat:"-2" }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="4" class="muted">No paid bills yet.</td></tr>{% endfor %}
+</table>
+<p class="muted" style="font-size:13px">Earnings are the consultation fee on bills marked <b>Paid</b>. Patients are counted once per doctor (cancelled appointments excluded).</p>
+{% endblock %}

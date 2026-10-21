@@ -1,0 +1,49 @@
+{% extends "panel/base.html" %}
+{% block title %}{% if obj %}Edit{% else %}Add{% endif %} {{ conf.singular|lower }}{% endblock %}
+{% block heading %}{% if obj %}Edit {{ conf.singular|lower }}{% else %}Add {{ conf.singular|lower }}{% endif %}{% endblock %}
+{% block subhint %}<div class="hint"><a href="{% url 'panel_list' kind %}">&larr; Back to {{ conf.plural|lower }}</a></div>{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="card" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<ul class="err">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+  <div class="fgrid">
+  {% for field in form %}
+    {% if field.widget_type == "checkbox" %}
+      <div class="field check"><label>{{ field }} {{ field.label }}</label>{% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}</div>
+    {% elif field.widget_type == "fileinput" or field.widget_type == "clearablefileinput" %}
+      <div class="field full">
+        <label>{{ field.label }}</label>
+        {% for e in field.errors %}<p class="err">{{ e }}</p>{% endfor %}
+        <div class="upload">
+          <div class="preview" id="pv-{{ field.html_name }}">{% if field.initial %}<img src="{{ field.initial.url }}" alt="">{% else %}No image yet{% endif %}</div>
+          <div>{{ field }}{% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}</div>
+        </div>
+      </div>
+    {% else %}
+      <div class="field {% if field.widget_type == 'textarea' %}full{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="req">*</span>{% endif %}</label>
+        {% for e in field.errors %}<p class="err">{{ e }}</p>{% endfor %}
+        {{ field }}
+        {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
+  </div>
+  <div class="formbar">
+    <button class="btn" type="submit">Save {{ conf.singular|lower }}</button>
+    <a class="btn light" href="{% url 'panel_list' kind %}">Cancel</a>
+  </div>
+</form>
+{% load static %}<script src="{% static 'hms/crop.js' %}"></script>
+<script>
+document.querySelectorAll('.upload input[type=file]').forEach(function (inp) {
+  inp.addEventListener('change', function () {
+    var f = inp.files[0], box = document.getElementById('pv-' + inp.name);
+    if (!f || !box) return;
+    var r = new FileReader();
+    r.onload = function (e) { box.innerHTML = ''; var im = document.createElement('img'); im.src = e.target.result; box.appendChild(im); };
+    r.readAsDataURL(f);
+  });
+});
+</script>
+{% endblock %}

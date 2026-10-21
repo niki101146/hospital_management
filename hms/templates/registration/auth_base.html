@@ -1,0 +1,68 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Login{% endblock %} | {{ hospital.name }}</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --brand:#b3122b; --brand-dark:#7d0c1e; --soft:#fdeef0; --line:#ece3e4; --text:#2a1f21; --muted:#74656a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Inter","Segoe UI",system-ui,-apple-system,Roboto,sans-serif; color:var(--text); background:#fff; line-height:1.5; }
+    a { color:var(--brand); }
+    h1, h2, h3, .brand, .logo { font-family:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif; letter-spacing:-.01em; }
+    .split { display:grid; grid-template-columns:1fr 1fr; min-height:100vh; }
+    .side { position:relative; color:#fff; padding:48px; display:flex; flex-direction:column; justify-content:space-between; background:#7d0c1e url('{% static "hms/img/hero-1.svg" %}') center/cover; }
+    .side::before { content:""; position:absolute; inset:0; background:linear-gradient(160deg,rgba(60,6,16,.75),rgba(60,6,16,.25)); }
+    .side > * { position:relative; }
+    .logo { display:flex; align-items:center; gap:10px; color:#fff; text-decoration:none; font-weight:800; font-size:22px; }
+    .logo i { font-style:normal; display:grid; place-items:center; width:42px; height:42px; border-radius:11px; background:linear-gradient(135deg,var(--brand),#d62839); font-size:24px; }
+    .side h2 { font-size:34px; line-height:1.2; margin:0 0 12px; max-width:420px; }
+    .side p { color:#ffd9de; max-width:420px; margin:0 0 20px; }
+    .side ul { list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+    .side li { padding-left:30px; position:relative; } .side li::before { content:"\2713"; position:absolute; left:0; top:1px; width:20px; height:20px; border-radius:50%; background:#ffffff2e; display:grid; place-items:center; font-size:12px; line-height:20px; text-align:center; }
+    .formside { display:flex; align-items:center; justify-content:center; padding:36px 24px; background:#fffafa; }
+    .box { width:100%; max-width:440px; }
+    .box h1 { margin:0 0 6px; font-size:30px; color:var(--brand-dark); }
+    .box .sub { color:var(--muted); margin:0 0 24px; }
+    .field { margin-bottom:16px; } .field.half { margin-bottom:16px; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+    label { display:block; font-weight:600; font-size:14px; margin-bottom:6px; }
+    input, select { width:100%; padding:12px 14px; border:1px solid #e0cfd2; border-radius:10px; font:inherit; background:#fff; }
+    input:focus, select:focus { outline:2px solid #b3122b44; border-color:var(--brand); }
+    .err { color:#b42318; font-size:13px; margin:0 0 5px; list-style:none; padding:0; }
+    .help { color:var(--muted); font-size:12px; margin-top:4px; }
+    .btn { display:block; width:100%; text-align:center; background:var(--brand); color:#fff; border:0; padding:13px; border-radius:10px; font:inherit; font-weight:700; cursor:pointer; text-decoration:none; }
+    .btn:hover { background:var(--brand-dark); }
+    .alt { text-align:center; margin-top:18px; color:var(--muted); font-size:14px; }
+    .back { display:inline-block; margin-top:22px; color:var(--muted); font-size:14px; text-decoration:none; }
+    .box-err { background:#fee2e2; border:1px solid #f6c4c4; color:#991b1b; padding:10px 14px; border-radius:10px; margin-bottom:16px; font-size:14px; }
+    @media (max-width:860px) { .split { grid-template-columns:1fr; } .side { padding:28px; min-height:260px; } .side h2 { font-size:26px; } .side ul { display:none; } .grid2 { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="split">
+  <section class="side">
+    <a class="logo" href="{% url 'home' %}"><i>&#10010;</i> {{ hospital.name }}</a>
+    <div>
+      <h2>{% block side_title %}Your health, in caring hands.{% endblock %}</h2>
+      <p>{{ hospital.tagline }}</p>
+      <ul>
+        <li>Book appointments online, any time</li>
+        <li>See prescriptions and bills in one place</li>
+        <li>Experienced specialists across every department</li>
+      </ul>
+    </div>
+    <small style="color:#ffd9de">&copy; {% now "Y" %} {{ hospital.name }}</small>
+  </section>
+  <section class="formside">
+    <div class="box">
+      {% block box %}{% endblock %}
+      <a class="back" href="{% url 'home' %}">&larr; Back to website</a>
+    </div>
+  </section>
+</div>
+</body>
+</html>

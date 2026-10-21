@@ -1,0 +1,25 @@
+{% extends "layout/shell.html" %}
+{% block title %}Website Manager{% endblock %}
+{% block sidebar %}
+    <a class="brand" href="{% url 'panel_home' %}"><i>&#10010;</i> Website Manager</a>
+    <small>Overview</small>
+    <a class="item {% if active == 'home' %}on{% endif %}" href="{% url 'panel_home' %}">Overview</a>
+    <small>Website content</small>
+    {% for n in nav %}{% if n.key != 'messages' and n.key != 'receptionists' %}
+    <a class="item {% if n.on %}on{% endif %}" href="{% url 'panel_list' n.key %}">{{ n.label }} <span class="cnt">{{ n.count }}</span></a>
+    {% endif %}{% endfor %}
+    <small>Inbox</small>
+    {% for n in nav %}{% if n.key == 'messages' %}
+    <a class="item {% if n.on %}on{% endif %} {% if n.count %}new{% endif %}" href="{% url 'panel_list' n.key %}">Messages {% if n.count %}<span class="cnt">{{ n.count }} new</span>{% endif %}</a>
+    {% endif %}{% endfor %}
+    <small>Staff</small>
+    {% for n in nav %}{% if n.key == 'receptionists' %}
+    <a class="item {% if n.on %}on{% endif %}" href="{% url 'panel_list' n.key %}">Receptionists <span class="cnt">{{ n.count }}</span></a>
+    {% endif %}{% endfor %}
+    <small>Hospital</small>
+    <a class="item" href="{% url 'dashboard' %}">Dashboard</a>
+    <a class="item" href="{% url 'patient_list' %}">Patients</a>
+    <a class="item" href="{% url 'appointment_list' %}">Appointments</a>
+    <a class="item" href="{% url 'bill_list' %}">Bills</a>
+    <a class="item" href="{% url 'home' %}" target="_blank" rel="noopener">View website &#8599;</a>
+{% endblock %}

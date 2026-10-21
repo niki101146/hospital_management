@@ -1,0 +1,40 @@
+<section class="rb-stats">
+  <div class="rb-stat res"><span>Arriving today</span><b>{{ counts.due }}</b><small>ready to check in</small></div>
+  <div class="rb-stat all"><span>Upcoming arrivals</span><b>{{ counts.upcoming }}</b><small>future bookings</small></div>
+  <div class="rb-stat occ"><span>In rooms now</span><b>{{ counts.inhouse }}</b><small>already checked in</small></div>
+</section>
+<h2>Arriving today</h2>
+<div class="rb-card">
+<table>
+  <tr><th>Patient</th><th>Room</th><th>Doctor</th><th>Stay</th><th>Days</th><th>Est. charge</th><th></th></tr>
+  {% for b in due %}
+  <tr>
+    <td><div class="who-cell"><span class="av">{{ b.patient.name|slice:":1"|upper }}</span><div><b><a href="{% url 'patient_detail' b.patient.pk %}">{{ b.patient.name }}</a></b><small>{{ b.patient.patient_id }} &middot; {{ b.patient.phone }}</small></div></div></td>
+    <td><span class="rpill">{{ b.room.number }}</span><small>{{ b.room.get_room_type_display }}</small></td>
+    <td>{{ b.doctor|default:"-" }}</td>
+    <td>{{ b.check_in|date:"d M" }} &rarr; {{ b.check_out|date:"d M Y" }}</td>
+    <td>{{ b.nights }}</td><td>&#8377;{{ b.estimated_charge|floatformat:"-2" }}</td>
+    <td class="actions">
+      <form method="post" action="{% url 'room_booking_action' b.pk 'checkin' %}">{% csrf_token %}<input type="hidden" name="next" value="room_checkin"><button class="btn small" type="submit">Check in</button></form>
+      <form method="post" action="{% url 'room_booking_action' b.pk 'cancel' %}" onsubmit="return confirm('Cancel this room booking?');">{% csrf_token %}<input type="hidden" name="next" value="room_checkin"><button class="btn small danger" type="submit">Cancel</button></form>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="muted" style="text-align:center;padding:30px">Nobody is due to check in right now.</td></tr>{% endfor %}
+</table>
+</div>
+<h2>Upcoming arrivals</h2>
+<div class="rb-card">
+<table>
+  <tr><th>Patient</th><th>Room</th><th>Doctor</th><th>Arrives</th><th>Days</th><th>Est. charge</th><th></th></tr>
+  {% for b in upcoming %}
+  <tr>
+    <td><div class="who-cell"><span class="av">{{ b.patient.name|slice:":1"|upper }}</span><div><b><a href="{% url 'patient_detail' b.patient.pk %}">{{ b.patient.name }}</a></b><small>{{ b.patient.patient_id }}</small></div></div></td>
+    <td><span class="rpill">{{ b.room.number }}</span><small>{{ b.room.get_room_type_display }}</small></td>
+    <td>{{ b.doctor|default:"-" }}</td>
+    <td><span class="tag BOOKED">{{ b.check_in|date:"D d M" }}</span><small>until {{ b.check_out|date:"d M" }}</small></td>
+    <td>{{ b.nights }}</td><td>&#8377;{{ b.estimated_charge|floatformat:"-2" }}</td>
+    <td class="actions"><form method="post" action="{% url 'room_booking_action' b.pk 'cancel' %}" onsubmit="return confirm('Cancel this room booking?');">{% csrf_token %}<input type="hidden" name="next" value="room_checkin"><button class="btn small danger" type="submit">Cancel</button></form></td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="muted" style="text-align:center;padding:30px">No upcoming bookings.</td></tr>{% endfor %}
+</table>
+</div>

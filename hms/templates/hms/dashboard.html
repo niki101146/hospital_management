@@ -1,0 +1,49 @@
+{% extends base_template %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+
+{% if role == "admin" or role == "receptionist" %}
+  <div class="stats">
+    <div class="stat"><b>{{ patients }}</b><span>Patients</span></div>
+    <div class="stat"><b>{{ doctors }}</b><span>Doctors</span></div>
+    <div class="stat"><b>{{ today_count }}</b><span>Appointments today</span></div>
+    <div class="stat"><b>{{ pending_bills }}</b><span>Pending bills</span></div>
+    {% if role == "receptionist" %}<div class="stat"><b>{{ admitted }}</b><span>Patients admitted (rooms)</span></div>{% endif %}
+    <div class="stat"><b>&#8377;{{ revenue }}</b><span>Collected (paid bills)</span></div>
+  </div>
+  <div class="toolbar">
+    <a class="btn" href="{% url 'patient_create' %}">+ Register patient</a>
+    <a class="btn" href="{% url 'appointment_create' %}">+ Book appointment</a>
+    {% if role == "receptionist" %}<a class="btn" href="{% url 'room_booking_create' %}">+ Book room</a>{% endif %}
+  </div>
+  {% if role == "admin" %}
+  <div class="card">
+    <h2 style="margin-top:0">Website Manager</h2>
+    <p class="muted" style="margin-top:0">Add departments and doctors, upload photos and change the home page banners. Changes go live on the website straight away.</p>
+    <div class="actions">
+      <a class="btn" href="{% url 'panel_home' %}">Open Website Manager</a>
+      <a class="btn light" href="{% url 'panel_add' 'departments' %}">+ Department</a>
+      <a class="btn light" href="{% url 'panel_add' 'doctors' %}">+ Doctor</a>
+      <a class="btn light" href="{% url 'panel_add' 'slides' %}">+ Hero banner</a>
+      <a class="btn light" href="{% url 'home' %}" target="_blank" rel="noopener">View website</a>
+    </div>
+  </div>
+  {% endif %}
+  <h2>Upcoming appointments</h2>
+  {% include "hms/_appointments_table.html" %}
+
+{% elif role == "doctor" %}
+  <div class="stats"><div class="stat"><b>{{ today_count }}</b><span>Your appointments today</span></div></div>
+  <h2>Upcoming appointments</h2>
+  {% include "hms/_appointments_table.html" %}
+
+{% elif role == "patient" %}
+  <div class="toolbar"><a class="btn" href="{% url 'portal_book' %}">+ Book an appointment</a></div>
+  <h2>Your upcoming appointments</h2>
+  {% include "hms/_appointments_table.html" %}
+
+{% else %}
+  <div class="card">Your account has no role yet. Ask the administrator to assign you as a doctor or receptionist.</div>
+{% endif %}
+{% endblock %}

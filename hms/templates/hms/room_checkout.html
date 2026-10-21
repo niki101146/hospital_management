@@ -1,0 +1,16 @@
+{% extends base_template %}
+{% load static %}
+{% block title %}Check-out{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'hms/rooms.css' %}">
+<div class="rb-head">
+  <div><h1>Check-out</h1><p class="rb-sub">Patients currently in a room. Check out to free the room and print the stay receipt.</p></div>
+  <div class="rb-actions">
+    <span class="live" id="live"><i></i>Live <small id="liveTime"></small></span>
+    <a class="btn light" href="{% url 'room_checkin' %}">Check-in</a>
+  </div>
+</div>
+<div class="rb-bar"><span></span><input type="search" class="rb-search" id="rowSearch" placeholder="Search patient, room or doctor" aria-label="Search"></div>
+<div id="board" class="rb-live-box" data-live data-url="{% url 'room_checkout' %}?partial=1">{% include "hms/_room_checkout.html" %}</div>
+<script src="{% static 'hms/rooms.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% load static %}<div class="tile doc-card">
+  <a class="photo" href="{% url 'doctor_detail' d.pk %}" style="text-decoration:none">
+    {% if d.photo %}<img src="{{ d.photo.url }}" alt="{{ d }}" loading="lazy">{% else %}<img class="ph" src="{% static d.placeholder %}" alt="{{ d }}" loading="lazy">{% endif %}
+    {% if d.experience_years %}<span class="badge">{{ d.experience_years }}+ yrs</span>{% endif %}
+  </a>
+  <div class="body">
+    <h3><a href="{% url 'doctor_detail' d.pk %}">{{ d }}</a></h3>
+    <div class="dept">{{ d.department.name }}</div>
+    <p class="qual">{{ d.specialization|default:"General practice" }}{% if d.qualification %} &middot; {{ d.qualification }}{% endif %}</p>
+    <div class="facts">
+      {% if d.available_days %}<span>&#128197; {{ d.available_days }}</span>{% endif %}
+      <span>&#8377;{{ d.consultation_fee|floatformat:"0" }} fee</span>
+    </div>
+    <div class="btns">
+      <a class="btn small" href="{{ book_url }}">Book an Appointment</a>
+      <a class="btn small light" href="{% url 'doctor_detail' d.pk %}">View Profile</a>
+    </div>
+  </div>
+</div>

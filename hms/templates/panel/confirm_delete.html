@@ -1,0 +1,14 @@
+{% extends "panel/base.html" %}
+{% block title %}Delete {{ conf.singular|lower }}{% endblock %}
+{% block heading %}Delete {{ conf.singular|lower }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:560px">
+  <h2>Are you sure?</h2>
+  <p>You are about to permanently delete <b>{{ obj }}</b>{% if kind == "doctors" %} and their login account{% endif %}. This cannot be undone.</p>
+  {% if kind == "departments" or kind == "doctors" %}<p class="muted">If you only want to remove it from the website for now, edit it and untick <b>Active</b> instead.</p>{% endif %}
+  <form method="post" class="formbar" style="border:0;margin:0;padding:0">{% csrf_token %}
+    <button class="btn danger" type="submit">Yes, delete</button>
+    <a class="btn light" href="{% url 'panel_list' kind %}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

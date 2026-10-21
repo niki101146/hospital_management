@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Dashboard{% endblock %} | {{ hospital.name }}</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --brand:#b3122b; --brand-dark:#7d0c1e; --soft:#fdeef0; --bg:#f6f1f2; --line:#ece3e4; --text:#2a1f21; --muted:#74656a; --side:#2b0a10; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Inter","Segoe UI",system-ui,-apple-system,Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+    a { color:var(--brand); }
+    h1, h2, h3, .brand, .logo { font-family:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif; letter-spacing:-.01em; }
+    .shell { display:grid; grid-template-columns:250px 1fr; min-height:100vh; }
+    aside { background:var(--side); color:#e8c4ca; padding:20px 14px; position:sticky; top:0; height:100vh; overflow:auto; }
+    aside .brand { display:flex; align-items:center; gap:10px; color:#fff; font-weight:800; font-size:18px; text-decoration:none; padding:4px 10px 18px; }
+    aside .brand i { font-style:normal; display:grid; place-items:center; width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,var(--brand),#d62839); }
+    aside small { display:block; padding:12px 12px 6px; font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:#b88c94; }
+    aside a.item { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:10px; color:#e8c4ca; text-decoration:none; font-size:15px; margin-bottom:2px; }
+    aside a.item:hover { background:#ffffff14; color:#fff; }
+    aside a.item.on { background:var(--brand); color:#fff; font-weight:600; }
+    aside .cnt { font-size:12px; background:#ffffff22; padding:1px 9px; border-radius:999px; }
+    aside a.item.new .cnt { background:#ffd1d6; color:var(--brand-dark); font-weight:700; }
+    .main { min-width:0; }
+    .top { background:#fff; border-bottom:1px solid var(--line); padding:14px 28px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:5; }
+    .top h1 { margin:0; font-size:22px; color:var(--brand-dark); }
+    .top .hint { color:var(--muted); font-size:13px; }
+    .top .right { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .content { padding:26px 28px 60px; max-width:1100px; }
+    .btn { display:inline-block; background:var(--brand); color:#fff; border:1px solid var(--brand); padding:9px 18px; border-radius:10px; text-decoration:none; font:inherit; font-weight:600; font-size:14px; cursor:pointer; transition:.15s; }
+    .btn:hover { background:var(--brand-dark); border-color:var(--brand-dark); }
+    .btn.light { background:#fff; color:var(--brand); } .btn.light:hover { background:var(--soft); }
+    .btn.danger { background:#fff; color:#b42318; border-color:#f0b4ae; } .btn.danger:hover { background:#fee4e2; }
+    .btn.small { padding:5px 12px; font-size:13px; border-radius:8px; }
+    .msg { padding:12px 16px; border-radius:10px; margin-bottom:16px; background:#dcfce7; border:1px solid #bbf0cb; }
+    .msg.error { background:#fee2e2; border-color:#f6c4c4; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:0 4px 18px rgba(125,12,30,.05); margin-bottom:20px; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:22px; }
+    .stat { background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 20px; text-decoration:none; color:inherit; transition:.15s; display:block; }
+    .stat:hover { border-color:#f0b4bc; box-shadow:0 10px 26px rgba(125,12,30,.1); transform:translateY(-2px); }
+    .stat b { display:block; font-size:32px; color:var(--brand); line-height:1.1; } .stat span { color:var(--muted); font-size:14px; }
+    .quick { display:flex; flex-wrap:wrap; gap:10px; }
+    h2 { margin:0 0 12px; font-size:18px; color:var(--brand-dark); }
+    .muted { color:var(--muted); }
+
+    .toolbar { display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; margin-bottom:16px; }
+    .toolbar form { display:flex; gap:8px; } .toolbar input[type=search] { padding:9px 14px; border:1px solid #e0cfd2; border-radius:10px; font:inherit; min-width:240px; }
+    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+    th, td { text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:middle; }
+    th { background:var(--soft); color:var(--brand-dark); font-size:12px; text-transform:uppercase; letter-spacing:.6px; }
+    tr:last-child td { border-bottom:0; } tr:hover td { background:#fffafa; }
+    .thumb { width:46px; height:46px; border-radius:50%; object-fit:cover; display:block; background:var(--soft); }
+    .thumb.wide { width:76px; border-radius:8px; }
+    .thumb-ph { width:46px; height:46px; border-radius:50%; display:grid; place-items:center; background:var(--soft); color:#c98a93; font-weight:700; font-size:14px; border:1px dashed #e8b9c0; }
+    .thumb-ph.wide { width:76px; border-radius:8px; font-size:20px; }
+    .pill-s { display:inline-block; padding:2px 11px; border-radius:999px; font-size:12px; font-weight:600; background:#e5e7eb; color:#4b5563; }
+    .pill-s.on { background:#dcfce7; color:#166534; }
+    .actions { display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap; }
+    .actions form { display:inline; }
+    .empty { text-align:center; padding:50px 20px; color:var(--muted); }
+
+    .fgrid { display:grid; grid-template-columns:1fr 1fr; gap:18px 22px; }
+    .field.full { grid-column:1/-1; }
+    .field label { display:block; font-weight:600; font-size:14px; margin-bottom:6px; color:var(--text); }
+    .field .req { color:var(--brand); }
+    .field input:not([type=checkbox]):not([type=file]), .field select, .field textarea { width:100%; padding:10px 12px; border:1px solid #e0cfd2; border-radius:10px; font:inherit; background:#fff; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline:2px solid #b3122b44; border-color:var(--brand); }
+    .field .help { color:var(--muted); font-size:12px; margin-top:5px; }
+    .field .err { color:#b42318; font-size:13px; margin:0 0 5px; padding:0; list-style:none; }
+    .field.check label { display:flex; gap:10px; align-items:center; font-weight:600; background:var(--soft); padding:12px 14px; border-radius:10px; margin:0; cursor:pointer; }
+    .field.check input { width:18px; height:18px; accent-color:var(--brand); }
+    .upload { display:flex; gap:16px; align-items:center; border:2px dashed #e8b9c0; border-radius:14px; padding:16px; background:#fffafa; }
+    .upload .preview { flex:none; width:120px; height:120px; border-radius:12px; background:var(--soft); display:grid; place-items:center; color:#c98a93; font-size:13px; text-align:center; overflow:hidden; }
+    .upload .preview img { width:100%; height:100%; object-fit:cover; }
+    .formbar { display:flex; gap:10px; margin-top:24px; padding-top:18px; border-top:1px solid var(--line); }
+    .msgbody { white-space:pre-wrap; background:var(--bg); border-radius:12px; padding:16px; margin:14px 0; }
+    dl.kv { display:grid; grid-template-columns:120px 1fr; gap:8px 14px; margin:0; } dl.kv dt { color:var(--muted); } dl.kv dd { margin:0; font-weight:600; }
+
+
+    /* shared page styles (staff and doctor pages) */
+    .content h1 { font-size:26px; color:var(--brand-dark); margin:0 0 18px; }
+    .content h2 { margin:26px 0 12px; }
+    .stat span { display:block; }
+    .tag { display:inline-block; padding:2px 11px; border-radius:999px; font-size:12px; font-weight:600; background:#e5e7eb; color:#374151; }
+    .tag.BOOKED { background:#dbeafe; color:#1e40af; } .tag.COMPLETED, .tag.PAID { background:#dcfce7; color:#166534; }
+    .tag.CANCELLED { background:#fee2e2; color:#991b1b; } .tag.ADMITTED { background:#ede9fe; color:#5b21b6; } .tag.PENDING { background:#fef3c7; color:#92400e; }
+    .toolbar input[type=text] { padding:9px 14px; border:1px solid #e0cfd2; border-radius:10px; font:inherit; min-width:260px; }
+    td.actions { display:table-cell; text-align:right; white-space:nowrap; } td.actions > * { margin-left:4px; }
+    form p { margin:0 0 16px; }
+    form label { display:block; font-weight:600; font-size:14px; margin-bottom:6px; }
+    form input:not([type=checkbox]):not([type=file]), form select, form textarea { width:100%; padding:10px 12px; border:1px solid #e0cfd2; border-radius:10px; font:inherit; background:#fff; }
+    form input:focus, form select:focus, form textarea:focus { outline:2px solid #b3122b44; border-color:var(--brand); }
+    .errorlist { color:#b42318; list-style:none; padding:0; margin:0 0 6px; font-size:13px; }
+    .helptext { color:var(--muted); font-size:12px; display:block; margin-top:4px; }
+    main.content-wrap { max-width:1100px; }
+    @media print { aside, .top, .no-print, .msg { display:none !important; } .shell { display:block; } .content { padding:0; max-width:none; } body { background:#fff; } .card { box-shadow:none; border:0; } }
+
+    @media (max-width:860px) {
+      .shell { grid-template-columns:1fr; } aside { position:static; height:auto; display:flex; flex-wrap:wrap; gap:4px; padding:12px; }
+      aside .brand { width:100%; padding-bottom:8px; } aside small { display:none; }
+      .fgrid { grid-template-columns:1fr; } .content, .top { padding-left:16px; padding-right:16px; }
+      table { display:block; overflow-x:auto; }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+{% block sidebar %}{% endblock %}
+  </aside>
+  <div class="main">
+    <div class="top">
+      <div>
+        <h1>{% block heading %}{{ hospital.name }}{% endblock %}</h1>
+        {% block subhint %}<div class="hint">{% now "l, d F Y" %}</div>{% endblock %}
+      </div>
+      <div class="right">
+        {% block topactions %}{% endblock %}
+        <span class="muted">{{ user.get_full_name|default:user.username }}</span>
+        <form method="post" action="{% url 'logout' %}" style="margin:0">{% csrf_token %}<button class="btn light small" type="submit">Logout</button></form>
+      </div>
+    </div>
+    <div class="content">
+      {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+</body>
+</html>

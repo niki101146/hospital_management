@@ -1,0 +1,14 @@
+{% extends base_template %}
+{% block title %}My records{% endblock %}
+{% block content %}
+<h1>My medical records</h1>
+{% for c in consultations %}
+<div class="card">
+  <b>{{ c.appointment.date|date:"d M Y" }}</b> - {{ c.appointment.doctor }}
+  <p><b>Symptoms:</b> {{ c.symptoms|default:"-" }}</p>
+  <p><b>Diagnosis:</b> {{ c.diagnosis|default:"-" }}</p>
+  <p><b>Prescription:</b><br>{{ c.prescription|linebreaksbr|default:"-" }}</p>
+  {% if c.notes %}<p><b>Notes:</b> {{ c.notes }}</p>{% endif %}
+</div>
+{% empty %}<div class="card muted">No consultation records yet.</div>{% endfor %}
+{% endblock %}

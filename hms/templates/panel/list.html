@@ -1,0 +1,40 @@
+{% extends "panel/base.html" %}
+{% block title %}{{ conf.plural }}{% endblock %}
+{% block heading %}{{ conf.plural }}{% endblock %}
+{% block subhint %}<div class="hint">{{ conf.hint }}</div>{% endblock %}
+{% block topactions %}{% if conf.form %}<a class="btn" href="{% url 'panel_add' kind %}">+ Add {{ conf.singular|lower }}</a>{% endif %}{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <form method="get"><input type="search" name="q" value="{{ q }}" placeholder="Search {{ conf.plural|lower }}" aria-label="Search"><button class="btn light" type="submit">Search</button>{% if q %}<a class="btn light" href="{% url 'panel_list' kind %}">Clear</a>{% endif %}</form>
+  <span class="muted" style="align-self:center">{{ rows|length }} item{{ rows|length|pluralize }}</span>
+</div>
+{% if rows %}
+<table>
+  <thead><tr>{% for c in conf.columns %}<th>{{ c }}</th>{% endfor %}<th></th></tr></thead>
+  <tbody>
+  {% for row in rows %}
+    <tr>
+      {% for c in row.cells %}
+      <td>
+        {% if c.t == "img" %}
+          {% if c.url %}<img class="thumb {% if c.wide %}wide{% endif %}" src="{{ c.url }}" alt="">{% else %}<span class="thumb-ph {% if c.wide %}wide{% endif %}">{{ c.init|default:"Img" }}</span>{% endif %}
+        {% elif c.t == "pill" %}<span class="pill-s {% if c.on %}on{% endif %}">{{ c.v }}</span>
+        {% else %}{{ c.v }}{% endif %}
+      </td>
+      {% endfor %}
+      <td><div class="actions">
+        {% if conf.form %}<a class="btn small light" href="{% url 'panel_edit' kind row.obj.pk %}">Edit</a>
+        {% else %}<a class="btn small light" href="{% url 'panel_message' row.obj.pk %}">Open</a>{% endif %}
+        <a class="btn small danger" href="{% url 'panel_delete' kind row.obj.pk %}">Delete</a>
+      </div></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="card empty">
+  <p>No {{ conf.plural|lower }} found.</p>
+  {% if conf.form %}<a class="btn" href="{% url 'panel_add' kind %}">+ Add {{ conf.singular|lower }}</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

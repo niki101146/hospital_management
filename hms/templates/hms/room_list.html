@@ -1,0 +1,17 @@
+{% extends base_template %}
+{% load static %}
+{% block title %}Rooms &amp; beds{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'hms/rooms.css' %}">
+<div class="rb-head">
+  <div><h1>Rooms &amp; beds</h1><p class="rb-sub">Live bed availability across the hospital. Updates automatically.</p></div>
+  <div class="rb-actions">
+    <span class="live" id="live"><i></i>Live <small id="liveTime"></small></span>
+    <a class="btn light" href="{% url 'room_booking_list' %}">Room bookings</a>
+    <a class="btn light" href="{% url 'room_create' %}">+ Add room</a>
+    <a class="btn" href="{% url 'room_booking_create' %}">+ Book room</a>
+  </div>
+</div>
+<div id="board" class="rb-live-box" data-live data-url="{% url 'room_list' %}?partial=1">{% include "hms/_room_board.html" %}</div>
+<script src="{% static 'hms/rooms.js' %}"></script>
+{% endblock %}

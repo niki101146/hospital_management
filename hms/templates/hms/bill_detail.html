@@ -1,0 +1,24 @@
+{% extends base_template %}
+{% block title %}Bill #{{ bill.pk }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:640px;margin:0 auto;">
+  <h1 style="text-align:center;">City Hospital - Bill #{{ bill.pk }}</h1>
+  <p><b>Patient:</b> {{ bill.appointment.patient.name }} ({{ bill.appointment.patient.patient_id }})<br>
+     <b>Doctor:</b> {{ bill.appointment.doctor }}<br>
+     <b>Visit date:</b> {{ bill.appointment.date|date:"d M Y" }}<br>
+     <b>Billed on:</b> {{ bill.created_at|date:"d M Y" }}</p>
+  <table>
+    <tr><td>Consultation fee</td><td>&#8377;{{ bill.consultation_fee }}</td></tr>
+    <tr><td>Other charges{% if bill.description %} ({{ bill.description }}){% endif %}</td><td>&#8377;{{ bill.other_charges }}</td></tr>
+    <tr><th>Total</th><th>&#8377;{{ bill.total }}</th></tr>
+  </table>
+  <p>Status: <span class="tag {{ bill.payment_status }}">{{ bill.get_payment_status_display }}</span></p>
+  <div class="actions no-print">
+    <button class="btn" onclick="window.print()">Print</button>
+    {% if bill.payment_status == "PENDING" and role == "admin" or bill.payment_status == "PENDING" and role == "receptionist" %}
+      <form method="post" action="{% url 'bill_mark_paid' bill.pk %}">{% csrf_token %}
+        <button class="btn light" type="submit">Mark as paid</button></form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

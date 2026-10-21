@@ -1,0 +1,71 @@
+{% extends base_template %}
+{% load static %}
+{% block title %}Book a room{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'hms/rooms.css' %}">
+<div class="rb-head">
+  <div><h1>Book a room</h1><p class="rb-sub">Choose the dates first. The panel on the right shows live bed availability.</p></div>
+  <div class="rb-actions"><a class="btn light" href="{% url 'room_booking_list' %}">&larr; Back to bookings</a></div>
+</div>
+
+<ol class="rf-steps" aria-label="Booking steps">
+  <li class="on"><i>1</i><span>Patient</span></li><li class="on"><i>2</i><span>Stay dates</span></li><li class="on"><i>3</i><span>Room</span></li><li><i>4</i><span>Confirm</span></li>
+</ol>
+
+<form method="post" class="rf" id="rbForm" novalidate>{% csrf_token %}
+  <div class="rf-main">
+    {% if form.non_field_errors %}<div class="errbox">{% for e in form.non_field_errors %}<div>{{ e }}</div>{% endfor %}</div>{% endif %}
+
+    <section class="card rf-sec">
+      <div class="rf-title"><i>1</i><div><h2>Patient</h2><p class="sub">Search by name or patient ID, then select.</p></div></div>
+      <div class="field">
+        {% for e in form.patient.errors %}<p class="err">{{ e }}</p>{% endfor %}
+        <input type="search" id="pSearch" class="psearch" placeholder="Type a name or patient ID to filter" autocomplete="off" aria-label="Search patients">
+        {{ form.patient }}
+      </div>
+    </section>
+
+    <section class="card rf-sec">
+      <div class="rf-title"><i>2</i><div><h2>Stay dates</h2><p class="sub">Availability on the right updates as soon as you pick dates.</p></div></div>
+      <div class="fgrid">
+        <div class="field"><label for="{{ form.check_in.id_for_label }}">Admission date <span class="req">*</span></label>
+          {% for e in form.check_in.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.check_in }}</div>
+        <div class="field"><label for="{{ form.check_out.id_for_label }}">Expected discharge <span class="req">*</span></label>
+          {% for e in form.check_out.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.check_out }}</div>
+      </div>
+    </section>
+
+    <section class="card rf-sec">
+      <div class="rf-title"><i>3</i><div><h2>Room &amp; care details</h2><p class="sub">Pick a room here or tap one in the live list.</p></div></div>
+      <div class="fgrid">
+        <div class="field full"><label for="{{ form.room.id_for_label }}">Room <span class="req">*</span></label>
+          {% for e in form.room.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.room }}</div>
+        <div class="field"><label for="{{ form.doctor.id_for_label }}">Doctor in charge</label>
+          {% for e in form.doctor.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.doctor }}</div>
+        <div class="field"><label for="{{ form.reason.id_for_label }}">Reason for admission</label>
+          {% for e in form.reason.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.reason }}</div>
+        <div class="field full check" id="nowBox"><label>{{ form.check_in_now }} {{ form.check_in_now.label }}</label></div>
+      </div>
+    </section>
+
+    <div class="rf-confirm">
+      <div><b>Ready to confirm?</b><span>Check the estimated total in the summary panel.</span></div>
+      <div class="formbar"><a class="btn light" href="{% url 'room_booking_list' %}">Cancel</a><button class="btn" type="submit" id="submitBtn">Confirm booking</button></div>
+    </div>
+  </div>
+
+  <aside class="card rf-panel" id="panel" data-url="{% url 'room_availability' %}">
+    <div class="rf-head"><h2>Live availability</h2><span class="live" id="live"><i></i>Live <small id="liveTime"></small></span></div>
+    <div class="rf-dates" id="rangeText">&nbsp;</div>
+    <div class="rtiles" id="tiles"><p class="muted">Loading rooms&hellip;</p></div>
+    <div class="rsum" id="sum" hidden>
+      <div><span>Selected room</span><b id="sRoom">-</b></div>
+      <div><span>Stay</span><b id="sNights">-</b></div>
+      <div><span>Rate</span><b id="sRate">-</b></div>
+      <div class="tot"><span>Estimated total</span><b id="sTotal">-</b></div>
+    </div>
+    <div class="rstate" id="state">Pick a room to see its availability.</div>
+  </aside>
+</form>
+<script src="{% static 'hms/room_form.js' %}"></script>
+{% endblock %}

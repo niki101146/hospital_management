@@ -1,0 +1,95 @@
+{% extends "site/base.html" %}{% load static %}
+{% block title %}About Us{% endblock %}
+{% block page %}
+<section class="page-hero ph1"><div class="container">
+  <h1>About {{ hospital.name }}</h1><p>Healthcare with a human touch, built around every patient.</p>
+</div></section>
+
+<section class="block"><div class="container about">
+  <div class="about-photo">
+    <img src="{% static 'hms/img/emergency.webp' %}" alt="{{ hospital.name }} building" onerror="this.onerror=null;this.src='{% static 'hms/img/about-hospital.svg' %}'">
+    <div class="float"><b>{{ hospital.established }}</b><span>Serving since</span></div>
+  </div>
+  <div>
+    <div class="sec-head" style="text-align:left;margin:0 0 14px"><small>Who we are</small><h2>Care that puts you first</h2></div>
+    <p class="muted">At {{ hospital.name }} we combine modern facilities with personal attention. Our team works together so that every patient gets clear answers, safe treatment and respectful care, from the first visit to the follow-up.</p>
+    <p class="muted">Register online to manage appointments, view your prescriptions and download your bills whenever you need them.</p>
+    <ul class="checks" style="margin:18px 0 24px">
+      <li>Experienced, qualified specialists</li><li>Transparent billing</li>
+      <li>Online appointments and records</li><li>24/7 emergency support</li>
+    </ul>
+    <a class="btn" href="{{ book_url }}">Book an Appointment</a>
+    <a class="btn light" href="{% url 'contact' %}">Contact us</a>
+  </div>
+</div></section>
+
+<section class="counters"><div class="container">
+  <div><b>{{ doctor_total }}+</b><span>Specialist doctors</span></div>
+  <div><b>{{ department_total }}</b><span>Departments</span></div>
+  <div><b>{{ hospital.beds }}+</b><span>Patient beds</span></div>
+  <div><b>{{ patient_total }}+</b><span>Registered patients</span></div>
+  <div><b>24/7</b><span>Emergency care</span></div>
+</div></section>
+
+<section class="block alt"><div class="container">
+  <div class="sec-head"><small>What drives us</small><h2>Our mission, vision &amp; values</h2></div>
+  <div class="grid c3 vmv">
+    <div class="tile"><div class="icon">&#127919;</div><h3>Our mission</h3><p>To deliver safe, affordable and compassionate healthcare that treats every patient with dignity.</p></div>
+    <div class="tile"><div class="icon">&#128065;</div><h3>Our vision</h3><p>To be the most trusted hospital in our community, known for clinical quality and kindness.</p></div>
+    <div class="tile"><div class="icon">&#10084;</div><h3>Our values</h3><p>Compassion, integrity, teamwork and continuous improvement in everything we do.</p></div>
+  </div>
+</div></section>
+
+<section class="block"><div class="container">
+  <div class="sec-head"><small>Facilities</small><h2>Modern facilities for complete care</h2><p>Everything you need for diagnosis, treatment and recovery in one place.</p></div>
+  <div class="grid c3">
+    <figure class="facility-card">
+      <img src="{% static 'hms/img/facility-emergency.jpg' %}" onerror="this.onerror=null;this.src='{% static 'hms/img/facility-emergency.svg' %}'" alt="24/7 Emergency &amp; ambulance" loading="lazy">
+      <figcaption><h3>24/7 Emergency &amp; ambulance</h3><p>Trained trauma team and ambulance support at all hours.</p></figcaption>
+    </figure>
+    <figure class="facility-card">
+      <img src="{% static 'hms/img/facility-icu.jpg' %}" onerror="this.onerror=null;this.src='{% static 'hms/img/facility-icu.svg' %}'" alt="Intensive care unit" loading="lazy">
+      <figcaption><h3>Intensive care unit</h3><p>Round-the-clock monitoring for critical patients.</p></figcaption>
+    </figure>
+    <figure class="facility-card">
+      <img src="{% static 'hms/img/facility-lab.jpg' %}" onerror="this.onerror=null;this.src='{% static 'hms/img/facility-lab.svg' %}'" alt="Diagnostic laboratory" loading="lazy">
+      <figcaption><h3>Diagnostic laboratory</h3><p>Accurate blood tests and pathology with quick reports.</p></figcaption>
+    </figure>
+    <figure class="facility-card">
+      <img src="{% static 'hms/img/facility-radiology.jpg' %}" onerror="this.onerror=null;this.src='{% static 'hms/img/facility-radiology.svg' %}'" alt="Radiology &amp; imaging" loading="lazy">
+      <figcaption><h3>Radiology &amp; imaging</h3><p>X-ray, ultrasound and scanning services.</p></figcaption>
+    </figure>
+    <figure class="facility-card">
+      <img src="{% static 'hms/img/facility-pharmacy.jpg' %}" onerror="this.onerror=null;this.src='{% static 'hms/img/facility-pharmacy.svg' %}'" alt="In-house pharmacy" loading="lazy">
+      <figcaption><h3>In-house pharmacy</h3><p>Medicines available right after your consultation.</p></figcaption>
+    </figure>
+    <figure class="facility-card">
+      <img src="{% static 'hms/img/facility-theatre.jpg' %}" onerror="this.onerror=null;this.src='{% static 'hms/img/facility-theatre.svg' %}'" alt="Operation theatres" loading="lazy">
+      <figcaption><h3>Operation theatres</h3><p>Modern, sterile theatres for planned and emergency surgery.</p></figcaption>
+    </figure>
+  </div>
+</div></section>
+
+{% if team %}
+<section class="block alt"><div class="container">
+  <div class="sec-head"><small>Our team</small><h2>Meet our doctors</h2></div>
+  <div class="grid c4">
+    {% for d in team %}
+    <div class="tile team-card">
+      <div class="pic">{% if d.photo %}<img src="{{ d.photo.url }}" alt="{{ d }}" loading="lazy">{% else %}<img class="ph" src="{% static d.placeholder %}" alt="{{ d }}" loading="lazy">{% endif %}</div>
+      <h3><a href="{% url 'doctor_detail' d.pk %}">{{ d }}</a></h3>
+      <div class="dept">{{ d.department.name }}</div>
+      <p>{{ d.qualification|default:d.specialization }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="center"><a class="btn light" href="{% url 'doctors_public' %}">View all doctors</a></div>
+</div></section>
+{% endif %}
+
+<section class="cta-band">
+  <h2>Your health is our priority</h2>
+  <p>Create an account and book your appointment online today.</p>
+  <a class="btn white" href="{{ book_url }}">Book an Appointment</a>
+</section>
+{% endblock %}

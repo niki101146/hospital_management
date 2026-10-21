@@ -1,0 +1,34 @@
+<section class="rb-stats">
+  <div class="rb-stat occ"><span>Checked in</span><b>{{ counts.admitted }}</b><small>patients in rooms now</small></div>
+  <div class="rb-stat res"><span>Due to arrive</span><b>{{ counts.due }}</b><small>booked for today or earlier</small></div>
+  <div class="rb-stat all"><span>Upcoming</span><b>{{ counts.upcoming }}</b><small>future bookings</small></div>
+</section>
+<div class="rb-card">
+<table>
+  <tr><th>Patient</th><th>Room</th><th>Doctor</th><th>Stay</th><th>Days</th><th>Est. charge</th><th>Status</th><th></th></tr>
+  {% for b in bookings %}
+  <tr>
+    <td><div class="who-cell"><span class="av">{{ b.patient.name|slice:":1"|upper }}</span><div><b><a href="{% url 'patient_detail' b.patient.pk %}">{{ b.patient.name }}</a></b><small>{{ b.patient.patient_id }}</small></div></div></td>
+    <td><span class="rpill">{{ b.room.number }}</span><small>{{ b.room.get_room_type_display }}</small></td>
+    <td>{{ b.doctor|default:"-" }}</td>
+    <td>{{ b.check_in|date:"d M" }} &rarr; {{ b.check_out|date:"d M Y" }}</td>
+    <td>{{ b.nights }}</td>
+    <td>&#8377;{{ b.estimated_charge|floatformat:"-2" }}</td>
+    <td>
+      <span class="tag {{ b.status }}">{{ b.get_status_display }}</span>
+      {% if b.status == "DISCHARGED" %}<a class="tag" style="text-decoration:none" href="{% url 'room_receipt' b.pk %}">Receipt</a>{% endif %}
+      {% if b.due %}<span class="tag DUE">Due</span>{% endif %}{% if b.overdue %}<span class="tag OVERDUE">Overdue</span>{% endif %}
+    </td>
+    <td class="actions">
+      {% if b.status == "BOOKED" %}
+        <form method="post" action="{% url 'room_booking_action' b.pk 'checkin' %}">{% csrf_token %}<input type="hidden" name="next" value="room_booking_list"><button class="btn small" type="submit">Check in</button></form>
+        <form method="post" action="{% url 'room_booking_action' b.pk 'cancel' %}" onsubmit="return confirm('Cancel this room booking?');">{% csrf_token %}<input type="hidden" name="next" value="room_booking_list"><button class="btn small danger" type="submit">Cancel</button></form>
+      {% elif b.status == "ADMITTED" %}
+        <form method="post" action="{% url 'room_booking_action' b.pk 'discharge' %}" onsubmit="return confirm('Discharge this patient and free the bed?');">{% csrf_token %}<input type="hidden" name="next" value="room_booking_list"><button class="btn small" type="submit">Discharge</button></form>
+      {% endif %}
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="8" class="muted" style="text-align:center;padding:34px">No room bookings here.</td></tr>{% endfor %}
+</table>
+</div>
+<p class="rb-note">Estimated charge = days &times; the room's daily charge (the discharge date is used once discharged). A bed stays taken until the patient is discharged.</p>

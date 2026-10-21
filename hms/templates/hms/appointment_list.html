@@ -1,0 +1,16 @@
+{% extends base_template %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<div class="toolbar">
+  {% if show %}
+    {% if role == "doctor" %}{% url 'doctor_appointments' as base %}{% else %}{% url 'appointment_list' as base %}{% endif %}
+    <a class="btn {% if show != 'upcoming' %}light{% endif %}" href="{{ base }}?show=upcoming">Upcoming</a>
+    <a class="btn {% if show != 'today' %}light{% endif %}" href="{{ base }}?show=today">Today</a>
+    <a class="btn {% if show != 'all' %}light{% endif %}" href="{{ base }}?show=all">All</a>
+  {% endif %}
+  {% if role == "admin" or role == "receptionist" %}<a class="btn" href="{% url 'appointment_create' %}">+ Book appointment</a>{% endif %}
+  {% if role == "patient" %}<a class="btn" href="{% url 'portal_book' %}">+ Book appointment</a>{% endif %}
+</div>
+{% include "hms/_appointments_table.html" %}
+{% endblock %}

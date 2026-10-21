@@ -1,0 +1,22 @@
+{% extends "registration/auth_base.html" %}
+{% block title %}Create account{% endblock %}
+{% block side_title %}Create your patient account{% endblock %}
+{% block box %}
+<h1>Create account</h1>
+<p class="sub">It takes less than a minute.</p>
+<form method="post" novalidate>{% csrf_token %}
+  <div class="field">{% for e in form.name.errors %}<p class="err">{{ e }}</p>{% endfor %}<label for="{{ form.name.id_for_label }}">Full name</label>{{ form.name }}</div>
+  <div class="grid2">
+    <div class="field">{% for e in form.date_of_birth.errors %}<p class="err">{{ e }}</p>{% endfor %}<label for="{{ form.date_of_birth.id_for_label }}">Date of birth</label>{{ form.date_of_birth }}</div>
+    <div class="field">{% for e in form.gender.errors %}<p class="err">{{ e }}</p>{% endfor %}<label for="{{ form.gender.id_for_label }}">Gender</label>{{ form.gender }}</div>
+  </div>
+  <div class="field">{% for e in form.phone.errors %}<p class="err">{{ e }}</p>{% endfor %}<label for="{{ form.phone.id_for_label }}">Phone</label>{{ form.phone }}</div>
+  <div class="field">{% for e in form.username.errors %}<p class="err">{{ e }}</p>{% endfor %}<label for="{{ form.username.id_for_label }}">Username</label>{{ form.username }}</div>
+  <div class="grid2">
+    <div class="field">{% for e in form.password1.errors %}<p class="err">{{ e }}</p>{% endfor %}<label for="{{ form.password1.id_for_label }}">Password</label>{{ form.password1 }}</div>
+    <div class="field">{% for e in form.password2.errors %}<p class="err">{{ e }}</p>{% endfor %}<label for="{{ form.password2.id_for_label }}">Confirm password</label>{{ form.password2 }}</div>
+  </div>
+  <button class="btn" type="submit">Register</button>
+</form>
+<p class="alt">Already registered? <a href="{% url 'login' %}">Log in</a></p>
+{% endblock %}

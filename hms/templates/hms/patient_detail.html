@@ -1,0 +1,37 @@
+{% extends "hms/base.html" %}
+{% block title %}{{ patient.name }}{% endblock %}
+{% block content %}
+<h1>{{ patient.name }} <span class="muted">({{ patient.patient_id }})</span></h1>
+<div class="card">
+  <p><b>Gender:</b> {{ patient.get_gender_display }} &nbsp; <b>Date of birth:</b> {{ patient.date_of_birth|date:"d M Y" }}
+     &nbsp; <b>Blood group:</b> {{ patient.blood_group|default:"-" }}</p>
+  <p><b>Phone:</b> {{ patient.phone }}</p>
+  <p><b>Address:</b> {{ patient.address|default:"-" }}</p>
+  <p><b>Allergies:</b> {{ patient.allergies|default:"None recorded" }}</p>
+  {% if role == "admin" or role == "receptionist" %}
+    <a class="btn light" href="{% url 'patient_edit' patient.pk %}">Edit</a>
+    <a class="btn" href="{% url 'appointment_create' %}?patient={{ patient.pk }}">Book appointment</a>
+    {% if role == "receptionist" %}<a class="btn" href="{% url 'room_booking_create' %}?patient={{ patient.pk }}">Book room</a>{% endif %}
+  {% endif %}
+</div>
+{% if role == "receptionist" and room_bookings %}
+<h2>Room bookings</h2>
+<table>
+  <tr><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th></tr>
+  {% for rb in room_bookings %}<tr><td>{{ rb.room }}</td><td>{{ rb.check_in|date:"d M Y" }}</td><td>{{ rb.check_out|date:"d M Y" }}</td><td><span class="tag {{ rb.status }}">{{ rb.get_status_display }}</span></td></tr>{% endfor %}
+</table>
+{% endif %}
+<h2>History</h2>
+{% for a in appointments %}
+<div class="card">
+  <b>{{ a.date|date:"d M Y" }}, {{ a.time|time:"h:i A" }}</b> - {{ a.doctor }} ({{ a.doctor.department }})
+  <span class="tag {{ a.status }}">{{ a.get_status_display }}</span>
+  {% if a.reason %}<div class="muted">Reason: {{ a.reason }}</div>{% endif %}
+  {% if a.consultation %}
+    <p><b>Symptoms:</b> {{ a.consultation.symptoms|default:"-" }}<br>
+       <b>Diagnosis:</b> {{ a.consultation.diagnosis|default:"-" }}<br>
+       <b>Prescription:</b> {{ a.consultation.prescription|linebreaksbr|default:"-" }}</p>
+  {% endif %}
+</div>
+{% empty %}<div class="card muted">No appointments yet.</div>{% endfor %}
+{% endblock %}

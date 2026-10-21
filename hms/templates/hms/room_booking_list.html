@@ -1,0 +1,24 @@
+{% extends base_template %}
+{% load static %}
+{% block title %}Room bookings{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'hms/rooms.css' %}">
+<div class="rb-head">
+  <div><h1>Room bookings</h1><p class="rb-sub">Book, check in and discharge patients. Updates automatically when a colleague makes a change.</p></div>
+  <div class="rb-actions">
+    <span class="live" id="live"><i></i>Live <small id="liveTime"></small></span>
+    <a class="btn light" href="{% url 'room_list' %}">Rooms &amp; beds</a>
+    <a class="btn" href="{% url 'room_booking_create' %}">+ Book room</a>
+  </div>
+</div>
+<div class="rb-bar">
+  <div class="rb-chips">
+    <a class="chip {% if show == 'active' %}on{% endif %}" href="?show=active" style="text-decoration:none">Current &amp; upcoming</a>
+    <a class="chip {% if show == 'history' %}on{% endif %}" href="?show=history" style="text-decoration:none">History</a>
+    <a class="chip {% if show == 'all' %}on{% endif %}" href="?show=all" style="text-decoration:none">All</a>
+  </div>
+  <input type="search" class="rb-search" id="rowSearch" placeholder="Search patient, room or doctor" aria-label="Search bookings">
+</div>
+<div id="bookings" class="rb-live-box" data-live data-url="{% url 'room_booking_list' %}?show={{ show }}&partial=1">{% include "hms/_room_booking_table.html" %}</div>
+<script src="{% static 'hms/rooms.js' %}"></script>
+{% endblock %}

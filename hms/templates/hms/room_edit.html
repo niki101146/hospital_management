@@ -1,0 +1,33 @@
+{% extends base_template %}
+{% load static %}
+{% block title %}{% if room %}Edit room{% else %}Add room{% endif %}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'hms/rooms.css' %}">
+<div class="rb-head">
+  <div><h1>{% if room %}Edit room {{ room.number }}{% else %}Add room{% endif %}</h1><p class="rb-sub">Rooms you add here appear straight away in Available rooms and the booking form.</p></div>
+  <div class="rb-actions"><a class="btn light" href="{% url 'room_list' %}">&larr; Room overview</a></div>
+</div>
+<div class="rf">
+  <form method="post" class="card" novalidate>{% csrf_token %}
+    <h2>Room details</h2><p class="sub">Number, type and price.</p>
+    {% if form.non_field_errors %}<div class="errbox">{% for e in form.non_field_errors %}<div>{{ e }}</div>{% endfor %}</div>{% endif %}
+    <div class="fgrid">
+      <div class="field"><label for="{{ form.number.id_for_label }}">Room number <span class="req">*</span></label>{% for e in form.number.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.number }}<div class="help">{{ form.number.help_text }}</div></div>
+      <div class="field"><label for="{{ form.room_type.id_for_label }}">Room type</label>{% for e in form.room_type.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.room_type }}</div>
+      <div class="field"><label for="{{ form.floor.id_for_label }}">Floor</label>{% for e in form.floor.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.floor }}</div>
+      <div class="field"><label for="{{ form.beds.id_for_label }}">Beds <span class="req">*</span></label>{% for e in form.beds.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.beds }}<div class="help">How many patients can stay at the same time. Use 1 for a private room, more for a ward.</div></div>
+      <div class="field"><label for="{{ form.daily_charge.id_for_label }}">Charge per bed / day (&#8377;) <span class="req">*</span></label>{% for e in form.daily_charge.errors %}<p class="err">{{ e }}</p>{% endfor %}{{ form.daily_charge }}</div>
+      <div class="field check"><label>{{ form.is_active }} Open for booking</label><div class="help">Untick to stop new bookings (for example, under maintenance).</div></div>
+    </div>
+    <div class="formbar"><button class="btn" type="submit">{% if room %}Save room{% else %}Add room{% endif %}</button><a class="btn light" href="{% url 'room_list' %}">Cancel</a></div>
+  </form>
+  <aside class="card">
+    <h2>Existing rooms</h2><p class="sub">Check here to avoid duplicate numbers.</p>
+    <table class="mini">
+      <tr><th>Room</th><th>Type</th><th>Beds</th><th>&#8377;/day</th></tr>
+      {% for r in rooms %}<tr><td><a href="{% url 'room_edit' r.pk %}"><b>{{ r.number }}</b></a>{% if not r.is_active %} <span class="muted">(closed)</span>{% endif %}</td><td>{{ r.get_room_type_display }}</td><td>{{ r.beds }}</td><td>{{ r.daily_charge|floatformat:"0" }}</td></tr>
+      {% empty %}<tr><td colspan="4" class="muted">No rooms yet.</td></tr>{% endfor %}
+    </table>
+  </aside>
+</div>
+{% endblock %}

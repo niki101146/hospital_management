@@ -1,0 +1,42 @@
+{% extends "layout/shell.html" %}
+{% block sidebar %}
+    <a class="brand" href="{% url 'dashboard' %}"><i>&#10010;</i> {{ hospital.name }}</a>
+    {% with page=request.resolver_match.url_name %}
+    <small>Menu</small>
+    <a class="item {% if page == 'dashboard' %}on{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+    {% if role == "admin" or role == "receptionist" %}
+      <a class="item {% if page == 'patient_list' or page == 'patient_detail' or page == 'patient_create' or page == 'patient_edit' %}on{% endif %}" href="{% url 'patient_list' %}">Patients</a>
+      <a class="item {% if page == 'appointment_list' or page == 'appointment_create' %}on{% endif %}" href="{% url 'appointment_list' %}">Appointments</a>
+      <a class="item {% if page == 'bill_list' or page == 'bill_detail' or page == 'bill_create' %}on{% endif %}" href="{% url 'bill_list' %}">Bills</a>
+    {% endif %}
+    {% if role == "receptionist" %}
+      <small>Room booking</small>
+      <a class="item {% if page == 'room_available' %}on{% endif %}" href="{% url 'room_available' %}">Available rooms</a>
+      <a class="item {% if page == 'room_booking_create' %}on{% endif %}" href="{% url 'room_booking_create' %}">Book a room</a>
+      <a class="item {% if page == 'room_checkin' %}on{% endif %}" href="{% url 'room_checkin' %}">Check-in</a>
+      <a class="item {% if page == 'room_checkout' or page == 'room_receipt' %}on{% endif %}" href="{% url 'room_checkout' %}">Check-out</a>
+      <a class="item {% if page == 'room_create' or page == 'room_edit' %}on{% endif %}" href="{% url 'room_create' %}">Add room</a>
+      <small>Rooms</small>
+      <a class="item {% if page == 'room_list' %}on{% endif %}" href="{% url 'room_list' %}">Room overview</a>
+      <a class="item {% if page == 'room_booking_list' %}on{% endif %}" href="{% url 'room_booking_list' %}">All bookings</a>
+    {% endif %}
+    {% if role == "doctor" %}
+      <a class="item {% if page == 'doctor_appointments' or page == 'consultation_edit' %}on{% endif %}" href="{% url 'doctor_appointments' %}">My appointments</a>
+      <a class="item {% if page == 'doctor_profile' %}on{% endif %}" href="{% url 'doctor_profile' %}">My profile &amp; photo</a>
+    {% endif %}
+    {% if role == "doctor" %}
+      <small>Finance</small>
+      <a class="item {% if page == 'fees' %}on{% endif %}" href="{% url 'fees' %}">Fees collection</a>
+    {% endif %}
+    {% if role == "admin" %}
+      <small>Finance</small>
+      <a class="item {% if page == 'fees' %}on{% endif %}" href="{% url 'fees' %}">Fees collection</a>
+      <small>Website</small>
+      <a class="item" href="{% url 'panel_home' %}">Website Manager</a>
+      <a class="item" href="{% url 'panel_list' 'doctors' %}">Doctors</a>
+      <a class="item" href="{% url 'panel_list' 'departments' %}">Departments</a>
+    {% endif %}
+    {% endwith %}
+    <small>Site</small>
+    <a class="item" href="{% url 'home' %}" target="_blank" rel="noopener">View website &#8599;</a>
+{% endblock %}

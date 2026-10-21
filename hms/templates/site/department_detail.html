@@ -1,0 +1,43 @@
+{% extends "site/base.html" %}{% load static %}
+{% block title %}{{ dept.name }}{% endblock %}
+{% block page %}
+<section class="page-hero ph2"><div class="container">
+  <h1>{{ dept.symbol }} {{ dept.name }}</h1>
+  <p>{{ dept.description|default:"Expert diagnosis and treatment by experienced specialists."|truncatechars:160 }}</p>
+</div></section>
+
+<section class="block"><div class="container">
+  <div class="dept-banner"><img src="{% if dept.image %}{{ dept.image.url }}{% else %}{% static 'hms/img/dept-banner.svg' %}{% endif %}" alt="{{ dept.name }}"></div>
+  <div class="about">
+    <div>
+      <div class="sec-head" style="text-align:left;margin:0 0 14px"><small>About the department</small><h2>{{ dept.name }}</h2></div>
+      <p class="muted">{{ dept.description|default:"Our specialists provide complete diagnosis, treatment and follow-up care."|linebreaksbr }}</p>
+      <a class="btn" href="{{ book_url }}">Book an Appointment</a>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;color:var(--brand-dark)">Treatments &amp; services</h3>
+      {% if dept.service_list %}
+      <ul class="checks">{% for item in dept.service_list %}<li>{{ item }}</li>{% endfor %}</ul>
+      {% else %}<p class="muted">Ask our reception for the full list of services.</p>{% endif %}
+    </div>
+  </div>
+</div></section>
+
+<section class="block alt"><div class="container">
+  <div class="sec-head"><small>Our team</small><h2>Doctors in {{ dept.name }}</h2></div>
+  <div class="grid docs">
+    {% for d in doctors %}{% include "site/_doctor_card.html" %}{% empty %}<p class="muted">Doctors for this department will be listed soon.</p>{% endfor %}
+  </div>
+</div></section>
+
+{% if others %}
+<section class="block"><div class="container">
+  <div class="sec-head"><small>Explore more</small><h2>Other departments</h2></div>
+  <div class="grid c3">
+    {% for o in others %}
+    <a class="tile dept-tile" href="{% url 'department_detail' o.pk %}"><div class="icon">{{ o.symbol }}</div><h3>{{ o.name }}</h3><span class="more">{{ o.doctor_count }} doctor{{ o.doctor_count|pluralize }} &rarr;</span></a>
+    {% endfor %}
+  </div>
+</div></section>
+{% endif %}
+{% endblock %}

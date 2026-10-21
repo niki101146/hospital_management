@@ -1,0 +1,28 @@
+<table>
+  <tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th><th></th></tr>
+  {% for a in appointments %}
+  <tr>
+    <td>{{ a.date|date:"d M Y" }}</td>
+    <td>{{ a.time|time:"h:i A" }}</td>
+    <td>{% if role == "admin" or role == "receptionist" or role == "doctor" %}<a href="{% url 'patient_detail' a.patient.pk %}">{{ a.patient.name }}</a>{% else %}{{ a.patient.name }}{% endif %}</td>
+    <td>{{ a.doctor }}</td>
+    <td>{{ a.reason|default:"-" }}</td>
+    <td><span class="tag {{ a.status }}">{{ a.get_status_display }}</span></td>
+    <td class="actions">
+      {% if role == "doctor" and a.status != "CANCELLED" %}
+        <a class="btn small" href="{% url 'consultation_edit' a.pk %}">Consultation</a>
+      {% endif %}
+      {% if role == "admin" or role == "receptionist" %}
+        <a class="btn small light" href="{% url 'bill_create' a.pk %}">Bill</a>
+      {% endif %}
+      {% if a.status == "BOOKED" and role != "doctor" %}
+        <form method="post" action="{% url 'appointment_cancel' a.pk %}" onsubmit="return confirm('Cancel this appointment?');">
+          {% csrf_token %}<button class="btn small danger" type="submit">Cancel</button>
+        </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="7" class="muted">No appointments.</td></tr>
+  {% endfor %}
+</table>

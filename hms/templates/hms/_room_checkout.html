@@ -2,6 +2,7 @@
   <div class="rb-stat occ"><span>In rooms now</span><b>{{ counts.inhouse }}</b><small>checked-in patients</small></div>
   <div class="rb-stat res"><span>Check-out due today</span><b>{{ counts.due_today }}</b><small>expected to leave today</small></div>
   <div class="rb-stat all"><span>Overdue</span><b>{{ counts.overdue }}</b><small>stayed past expected date</small></div>
+  <div class="rb-stat free"><span>Checked out</span><b>{{ counts.checked_out }}</b><small>{{ counts.checked_out_today }} today &middot; <a href="{% url 'room_booking_list' %}?show=history">view history</a></small></div>
 </section>
 <div class="rb-card">
 <table>

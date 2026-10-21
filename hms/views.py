@@ -708,6 +708,8 @@ def room_checkout(request):
         "inhouse": len(inhouse),
         "due_today": len([b for b in inhouse if b.due_today]),
         "overdue": len([b for b in inhouse if b.overdue]),
+        "checked_out": RoomBooking.objects.filter(status="DISCHARGED").count(),
+        "checked_out_today": RoomBooking.objects.filter(status="DISCHARGED", discharged_on=today).count(),
     }
     ctx = {"bookings": inhouse, "counts": counts}
     return render(request, "hms/_room_checkout.html" if request.GET.get("partial") else "hms/room_checkout.html", ctx)

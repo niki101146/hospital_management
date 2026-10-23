@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
   <title>{% block title %}{{ hospital.name }}{% endblock %} | {{ hospital.name }}</title>
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,12 +135,6 @@
     .pill { display:inline-block; padding:7px 16px; border-radius:999px; border:1px solid var(--line); text-decoration:none; color:var(--text); margin:0 6px 8px 0; font-size:14px; background:#fff; }
     .pill.on, .pill:hover { background:var(--brand); color:#fff; border-color:var(--brand); }
 
-    footer.site { background:#2b0a10; color:#e8c4ca; padding:46px 0 0; }
-    footer.site .cols { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:30px; }
-    footer.site h4 { color:#fff; margin:0 0 12px; }
-    footer.site a { color:#e8c4ca; text-decoration:none; display:block; margin-bottom:6px; }
-    footer.site a:hover { color:#fff; }
-    footer.site .copy { border-top:1px solid #ffffff1f; margin-top:30px; padding:16px 0; font-size:13px; text-align:center; }
 
 
     /* ---- hero slider ---- */
@@ -193,8 +187,9 @@
     .doc-card .dept { color:var(--accent); font-weight:600; font-size:14px; }
     .doc-card .qual { color:var(--muted); font-size:13px; margin:6px 0 0; }
     .doc-card .facts { display:flex; gap:14px; flex-wrap:wrap; margin:12px 0 0; font-size:13px; color:var(--muted); }
-    .doc-card .btns { display:flex; flex-direction:column; gap:8px; margin-top:auto; padding-top:16px; }
-    .doc-card .btns .btn { text-align:center; }
+    .doc-card .btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:auto; padding-top:14px; }
+    .doc-card .btns .btn { text-align:center; padding-left:8px; padding-right:8px; }
+    .doc-card .facts .fee { font-weight:700; color:var(--brand-dark); }
     .search-bar { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
     .search-bar input { flex:1; min-width:220px; padding:11px 14px; border:1px solid #e0cfd2; border-radius:999px; font:inherit; }
     .center { text-align:center; margin-top:30px; }
@@ -237,6 +232,20 @@
     .grid.docs .doc-card .btns { padding-top:12px; gap:6px; }
     .grid.docs .noimg b { font-size:24px; }
     .grid.docs .noimg small { display:none; }
+
+    /* Our Doctors page: clean 4-up card grid */
+    .doctors-page .grid.docs { grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:20px; }
+    .doctors-page .doc-card { border-radius:16px; border:1px solid #efe3e5; box-shadow:0 2px 10px rgba(125,12,30,.06); transition:transform .2s, box-shadow .2s; }
+    .doctors-page .doc-card:hover { transform:translateY(-4px); box-shadow:0 14px 30px rgba(125,12,30,.14); }
+    .doctors-page .grid.docs .doc-card .photo { aspect-ratio:1/1; }
+    .doctors-page .grid.docs .doc-card .body { padding:14px 16px 16px; text-align:center; }
+    .doctors-page .grid.docs .doc-card h3 { font-size:17px; margin:0; }
+    .doctors-page .grid.docs .doc-card .dept { display:inline-block; align-self:center; margin-top:6px; background:var(--soft); color:var(--brand); font-size:12px; padding:3px 12px; border-radius:999px; }
+    .doctors-page .grid.docs .doc-card .qual { font-size:13px; margin-top:8px; line-height:1.35; }
+    .doctors-page .grid.docs .doc-card .facts { font-size:13px; margin-top:10px; padding-top:10px; border-top:1px solid #f1e6e8; justify-content:center; gap:6px 14px; }
+    .doctors-page .grid.docs .doc-card .btn.small { padding:8px 10px; font-size:13px; }
+    .doctors-page .grid.docs .doc-card .btns { padding-top:14px; gap:8px; }
+    .doctors-page .grid.docs .doc-card .badge { font-size:12px; padding:4px 10px; left:10px; top:10px; }
     .dept-chips { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:12px; }
     section.block.dept-section { padding:44px 0 40px; }
     .dept-section .sec-head { margin-bottom:22px; }
@@ -286,8 +295,11 @@
     .page-hero h1 { font-size:40px; } .page-hero p { font-size:17px; max-width:560px; }
 
     /* your own banner images: drop the files into hms/static/hms/img/ */
-    .page-hero.mb-dept { background-image:url('{% static "hms/img/departments-banner.jpg" %}'), linear-gradient(120deg,var(--brand-dark),var(--brand)); }
-    .page-hero.mb-doc { background-image:url('{% static "hms/img/doctors-banner.jpg" %}'), linear-gradient(120deg,var(--brand-dark),var(--brand)); }
+    .page-hero.mb-about { background-image:url('{% static "hms/img/about-ban.webp" %}'), linear-gradient(120deg,var(--brand-dark),var(--brand)); }
+    .page-hero.mb-contact { background-image:url('{% static "hms/img/contact.webp" %}'), linear-gradient(120deg,var(--brand-dark),var(--brand)); }
+    .page-hero.mb-dept { background-image:url('{% static "hms/img/dept-hero.webp" %}'), linear-gradient(120deg,var(--brand-dark),var(--brand)); }
+    .page-hero.mb-doc { background-image:url('{% static "hms/img/doc_hero.webp" %}'), linear-gradient(120deg,var(--brand-dark),var(--brand)); }
+    .page-hero.mb-docd { background-image:url('{% static "hms/img/doct-ban.webp" %}'), linear-gradient(120deg,var(--brand-dark),var(--brand)); }
 
     /* department cards with images */
     .dept-card2 { padding:0; overflow:hidden; display:flex; flex-direction:column; position:relative; min-height:300px; background:#fff; }
@@ -345,25 +357,195 @@
 
 
     /* chatbot */
-    .cb-fab { position:fixed; right:22px; bottom:22px; z-index:60; display:flex; align-items:center; gap:8px; background:linear-gradient(135deg,var(--brand),var(--accent)); color:#fff; border:0; border-radius:999px; padding:13px 20px; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 12px 30px rgba(125,12,30,.4); }
+    .cb-fab { position:fixed; right:22px; bottom:22px; z-index:60; display:flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand),var(--accent)); color:#fff; border:0; border-radius:999px; padding:13px 20px 13px 16px; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 12px 30px rgba(125,12,30,.4); transition:transform .2s; }
     .cb-fab:hover { transform:translateY(-2px); }
-    .cb-panel { position:fixed; right:22px; bottom:86px; z-index:60; width:370px; max-width:calc(100vw - 24px); height:520px; max-height:calc(100vh - 110px); background:#fff; border-radius:18px; box-shadow:0 24px 60px rgba(60,6,16,.35); display:none; flex-direction:column; overflow:hidden; border:1px solid var(--line); }
-    .cb-panel.open { display:flex; }
-    .cb-head { background:linear-gradient(120deg,var(--brand-dark),var(--brand)); color:#fff; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; }
-    .cb-head b { display:block; } .cb-head small { color:#ffd9de; }
-    .cb-close { background:none; border:0; color:#fff; font-size:22px; cursor:pointer; line-height:1; }
-    .cb-body { flex:1; overflow-y:auto; padding:14px; background:#fdf8f8; display:flex; flex-direction:column; gap:10px; }
-    .cb-msg { max-width:88%; padding:10px 13px; border-radius:14px; font-size:14px; white-space:pre-wrap; word-wrap:break-word; }
-    .cb-msg.bot { background:#fff; border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:4px; }
-    .cb-msg.me { background:var(--brand); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; }
-    .cb-links, .cb-chips { display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; }
-    .cb-links a { background:var(--soft); color:var(--brand-dark); border:1px solid #f0b4bc; padding:5px 12px; border-radius:999px; font-size:13px; text-decoration:none; font-weight:600; }
-    .cb-chips button { background:#fff; border:1px solid var(--brand); color:var(--brand); padding:5px 12px; border-radius:999px; font:inherit; font-size:13px; cursor:pointer; }
-    .cb-chips button:hover { background:var(--brand); color:#fff; }
-    .cb-form { display:flex; gap:8px; padding:10px; border-top:1px solid var(--line); background:#fff; }
-    .cb-form input { flex:1; padding:11px 14px; border:1px solid #e0cfd2; border-radius:999px; font:inherit; }
-    .cb-form button { border:0; background:var(--brand); color:#fff; border-radius:999px; padding:0 18px; font:inherit; font-weight:700; cursor:pointer; }
-    @media print { .cb-fab, .cb-panel { display:none !important; } }
+    .cb-fab svg { width:22px; height:22px; fill:none; stroke:#fff; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+    .cb-fab::after { content:""; position:absolute; top:-2px; right:-2px; width:13px; height:13px; border-radius:50%; background:#34d399; border:2px solid #fff; }
+    .cb-panel { position:fixed; right:22px; bottom:90px; z-index:130; width:380px; max-width:calc(100vw - 24px); height:540px; max-height:calc(100vh - 110px); background:#fff; border-radius:20px; box-shadow:0 28px 70px rgba(60,6,16,.38); display:none; flex-direction:column; overflow:hidden; border:1px solid var(--line); }
+    .cb-panel.open { display:flex; animation:cbIn .28s ease both; }
+    @keyframes cbIn { from { opacity:0; transform:translateY(16px) scale(.98); } to { opacity:1; transform:none; } }
+    .cb-head { background:linear-gradient(120deg,#5a0a17,var(--brand) 75%,#d62839); color:#fff; padding:14px 14px 14px 16px; display:flex; gap:12px; align-items:center; }
+    .cb-avatar { position:relative; flex:none; width:42px; height:42px; border-radius:50%; background:#ffffff26; display:grid; place-items:center; font-size:20px; }
+    .cb-avatar::after { content:""; position:absolute; right:0; bottom:0; width:11px; height:11px; border-radius:50%; background:#34d399; border:2px solid #8b0f22; }
+    .cb-title { flex:1; min-width:0; }
+    .cb-head b { display:block; font-size:15.5px; line-height:1.25; } .cb-head small { color:#ffd9de; font-size:12.5px; }
+    .cb-close { flex:none; width:36px; height:36px; border-radius:50%; background:#ffffff1f; border:0; color:#fff; font-size:22px; cursor:pointer; line-height:1; display:grid; place-items:center; }
+    .cb-close:hover { background:#ffffff38; }
+    .cb-body { flex:1; overflow-y:auto; padding:16px 14px; background:#fbf6f6; display:flex; flex-direction:column; gap:10px; scroll-behavior:smooth; }
+    .cb-msg { max-width:86%; padding:10px 14px; border-radius:16px; font-size:14.5px; line-height:1.45; white-space:pre-wrap; word-wrap:break-word; animation:cbMsg .25s ease both; }
+    @keyframes cbMsg { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+    .cb-msg.bot { background:#fff; border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:5px; box-shadow:0 2px 8px rgba(125,12,30,.05); }
+    .cb-msg.me { background:linear-gradient(135deg,var(--brand),#d62839); color:#fff; align-self:flex-end; border-bottom-right-radius:5px; }
+    .cb-msg.typing { display:flex; gap:5px; padding:14px 16px; }
+    .cb-msg.typing i { width:7px; height:7px; border-radius:50%; background:#c9a3aa; animation:cbDot 1.1s infinite ease-in-out; }
+    .cb-msg.typing i:nth-child(2) { animation-delay:.15s; } .cb-msg.typing i:nth-child(3) { animation-delay:.3s; }
+    @keyframes cbDot { 0%,60%,100% { transform:translateY(0); opacity:.5; } 30% { transform:translateY(-5px); opacity:1; } }
+    .cb-links, .cb-chips { display:flex; flex-wrap:wrap; gap:7px; align-self:flex-start; }
+    .cb-links a { background:var(--soft); color:var(--brand-dark); border:1px solid #f0b4bc; padding:6px 13px; border-radius:999px; font-size:13px; text-decoration:none; font-weight:600; }
+    .cb-chips button { background:#fff; border:1px solid #e9c3c9; color:var(--brand); padding:7px 13px; border-radius:999px; font:inherit; font-size:13px; font-weight:600; cursor:pointer; transition:.15s; }
+    .cb-chips button:hover { background:var(--brand); color:#fff; border-color:var(--brand); }
+    .cb-form { display:flex; gap:8px; padding:10px 12px 12px; border-top:1px solid var(--line); background:#fff; align-items:center; }
+    .cb-form input { flex:1; min-width:0; padding:12px 16px; border:1px solid #e6d3d6; border-radius:999px; font:inherit; font-size:15px; background:#fbf6f6; }
+    .cb-form input:focus { outline:2px solid #b3122b33; border-color:var(--brand); background:#fff; }
+    .cb-form button { flex:none; width:44px; height:44px; border:0; background:linear-gradient(135deg,var(--brand),#d62839); color:#fff; border-radius:50%; cursor:pointer; display:grid; place-items:center; }
+    .cb-form button svg { width:20px; height:20px; fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* ---- footer ---- */
+    footer.site { background:linear-gradient(180deg,#2b0a10,#1b0509); color:#e8c4ca; padding:34px 0 0; font-size:14px; }
+    footer.site a { color:#e8c4ca; text-decoration:none; transition:color .2s, background .2s; }
+    footer.site a:hover { color:#fff; }
+    footer.site .f-main { display:grid; grid-template-columns:1.1fr 1.3fr 1.2fr; gap:32px; align-items:start; }
+    footer.site .f-logo { display:flex; align-items:center; gap:10px; color:#fff; font-weight:800; font-size:19px; }
+    footer.site .f-logo i { font-style:normal; display:grid; place-items:center; width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--brand),var(--accent)); font-size:19px; }
+    footer.site .f-brand p { margin:10px 0 14px; color:#cfa7ae; font-size:13.5px; line-height:1.5; max-width:300px; }
+    footer.site .f-sos { display:inline-flex; align-items:center; gap:9px; background:#ffffff12; border:1px solid #ffffff22; padding:8px 16px 8px 10px; border-radius:999px; color:#fff; font-weight:600; font-size:13.5px; }
+    footer.site .f-sos:hover { background:#ffffff22; }
+    footer.site .f-sos b { display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:#d62839; font-size:13px; }
+    footer.site .f-sos em { font-style:normal; color:#ff8a94; font-weight:800; }
+    footer.site h4 { color:#fff; margin:0 0 12px; font-size:12px; letter-spacing:1.3px; text-transform:uppercase; opacity:.9; }
+    footer.site .f-links nav { display:grid; grid-template-columns:1fr 1fr; gap:2px 14px; }
+    footer.site .f-links a { display:flex; align-items:center; gap:6px; padding:7px 0; white-space:nowrap; }
+    footer.site .f-links a svg { width:14px; height:14px; fill:none; stroke:#d62839; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; flex:none; transition:transform .2s; }
+    footer.site .f-links a:hover svg { transform:translateX(3px); }
+    footer.site .f-contact a, footer.site .f-contact .row { display:flex; align-items:flex-start; gap:11px; padding:5px 0; line-height:1.4; color:#e8c4ca; }
+    footer.site .f-contact .ico { flex:none; display:grid; place-items:center; width:32px; height:32px; border-radius:10px; background:#ffffff12; color:#ff8a94; }
+    footer.site .f-contact .ico svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+    footer.site .f-contact span.t { padding-top:5px; min-width:0; word-break:break-word; }
+    footer.site .f-contact a:hover .ico { background:var(--brand); color:#fff; }
+    footer.site .copy { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px 16px; border-top:1px solid #ffffff1c; margin-top:24px; padding:14px 0; font-size:12.5px; color:#b88c94; }
+    footer.site .copy span:last-child { color:#e8c4ca; }
+
+    /* ---- hamburger, drawer, floating bottom nav ---- */
+    .i { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+    .menu-toggle { display:none; width:44px; height:44px; border:1px solid var(--line); border-radius:12px; background:#fff; cursor:pointer; padding:0; margin-left:auto; align-items:center; justify-content:center; color:var(--brand-dark); }
+    nav.main a .i { display:none; }
+    .drawer, .drawer-head, .drawer-bg, .bottom-nav { display:none; }
+    html, body { overflow-x:clip; }
+
+    @media (max-width:860px) {
+      body.menu-open { overflow:hidden; }
+      img { max-width:100%; }
+      .container { padding:0 16px; }
+      .topbar .container { justify-content:center; text-align:center; padding-top:6px; padding-bottom:6px; }
+      .topbar .container > span:last-child { display:none; }
+      header.site { position:static; backdrop-filter:none; -webkit-backdrop-filter:none; background:#fff; box-shadow:0 1px 0 var(--line); }
+      header.site .container { flex-wrap:nowrap; justify-content:space-between; gap:10px; padding-top:9px; padding-bottom:9px; }
+      .logo { font-size:18px; }
+      .menu-toggle { display:flex; margin-left:auto; }
+      header.site .desk-only { display:none !important; }
+
+      /* slide-in drawer */
+      .drawer { display:flex; flex-direction:column; position:fixed; top:0; right:0; bottom:0; width:min(86vw,340px); background:#fff; z-index:120; transform:translateX(105%); visibility:hidden; transition:transform .3s cubic-bezier(.22,.8,.3,1), visibility .3s; box-shadow:-20px 0 50px rgba(40,4,12,.25); overflow-y:auto; padding-bottom:18px; }
+      body.menu-open .drawer { transform:none; visibility:visible; }
+      .drawer-head { order:0; display:flex; align-items:center; justify-content:space-between; padding:14px 14px 14px 18px; border-bottom:1px solid var(--line); }
+      .drawer-head .logo { font-size:17px; }
+      .drawer-close { width:40px; height:40px; border:0; border-radius:50%; background:var(--soft); color:var(--brand-dark); cursor:pointer; display:grid; place-items:center; }
+      .drawer-bg { display:block; position:fixed; inset:0; background:rgba(30,4,10,.55); opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; z-index:110; }
+      body.menu-open .drawer-bg { opacity:1; visibility:visible; }
+      .drawer nav.main { display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:3px; padding:12px; margin:0; width:100%; order:1; flex:0 0 auto; }
+      .drawer nav.main a { display:flex; align-items:center; justify-content:flex-start; text-align:left; gap:14px; padding:13px 14px; border-radius:12px; font-size:16px; font-weight:600; }
+      .drawer nav.main a .i { display:block; color:var(--brand); }
+      .drawer nav.main a.on { background:var(--soft); }
+      .drawer .head-actions { display:flex; flex-direction:column; align-items:stretch; gap:10px; padding:14px 16px 0; margin-top:auto; width:100%; border-top:1px solid var(--line); order:2; }
+      .drawer .head-actions .btn { display:block; width:100%; text-align:center; padding:13px 16px; font-size:15px; }
+      .drawer .head-actions form { margin:0; }
+      details.account summary { justify-content:center; }
+      details.account .menu { position:static; box-shadow:none; margin-top:8px; width:100%; }
+
+
+      /* floating bottom nav */
+      body { padding-bottom:92px; }
+      .bottom-nav { display:flex; position:fixed; left:12px; right:12px; bottom:12px; z-index:70; align-items:center; justify-content:space-around; background:rgba(255,255,255,.97); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:24px; box-shadow:0 14px 36px rgba(60,6,16,.24); padding:6px 4px; }
+      .bottom-nav a, .bottom-nav button { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; font:inherit; font-size:11px; font-weight:600; color:#85747a; text-decoration:none; background:none; border:0; padding:7px 2px; border-radius:16px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+      .bottom-nav .i { width:22px; height:22px; }
+      .bottom-nav a.on { color:var(--brand); }
+      .bottom-nav a.on .i { stroke-width:2.2; }
+      .bottom-nav a.book .bk { display:grid; place-items:center; width:52px; height:52px; margin-top:-30px; border-radius:50%; background:linear-gradient(135deg,var(--brand),#d62839); color:#fff; border:4px solid #fff; box-shadow:0 8px 20px rgba(179,18,43,.45); }
+      .bottom-nav a.book { color:var(--brand); }
+      body.menu-open .bottom-nav, body.cb-open .bottom-nav { display:none; }
+
+      /* chat on mobile: round button above the bottom nav, bottom-sheet panel */
+      .cb-fab { right:14px; bottom:96px; width:52px; height:52px; padding:0; justify-content:center; }
+      .cb-fab .lbl { display:none; }
+      .cb-panel { right:0; left:0; bottom:0; width:100%; max-width:none; height:min(84vh,680px); max-height:none; border-radius:22px 22px 0 0; border:0; }
+      .cb-form { padding-bottom:max(12px, env(safe-area-inset-bottom)); }
+      body.cb-open .cb-fab { display:none; }
+      body.cb-open { overflow:hidden; }
+
+      /* hero slider */
+      .slides { height:auto; min-height:440px; }
+      .slide { align-items:flex-end; }
+      .slide .container { padding-top:56px; padding-bottom:72px; }
+      .slide h1 { font-size:30px; line-height:1.15; margin-bottom:10px; }
+      .slide p.lead { font-size:15px; margin-bottom:18px; }
+      .slide .cta { gap:10px; }
+      .slide .cta .btn { padding:10px 16px; font-size:14px; }
+      .slide.photo::before { background:linear-gradient(180deg,rgba(10,16,26,.35),rgba(10,16,26,.8)); }
+      .slide .eyebrow { font-size:12px; padding:5px 12px; }
+      .sl-dots { bottom:18px; }
+
+      .finder-wrap { margin-top:-30px; }
+      .finder { padding:14px; gap:10px; grid-template-columns:1fr; }
+      .finder b { grid-column:auto; }
+      .finder .btn { width:100%; padding:12px; }
+
+      section.block { padding:40px 0; }
+      .page-home section.block { padding:32px 0; }
+      .sec-head { margin-bottom:20px; }
+      .sec-head h2 { font-size:25px; }
+      .page-hero { padding:44px 0 40px; }
+      .page-hero h1 { font-size:30px; }
+      .page-hero p { font-size:15px; }
+      .stats-strip .container { grid-template-columns:1fr 1fr; gap:10px; }
+      .stats-strip b { font-size:26px; }
+      .emergency-band .container { flex-direction:column; align-items:flex-start; gap:10px; }
+      .emergency-band .btn { width:100%; text-align:center; }
+      .welcome-strip .container { flex-direction:column; align-items:flex-start; }
+      .welcome-strip .actions { margin-left:0 !important; }
+
+      .dslide { flex-basis:min(74vw,260px); }
+      .doctors-page .grid.docs { grid-template-columns:repeat(2,1fr); gap:12px; }
+      .doctors-page .grid.docs .doc-card .body { padding:10px 10px 12px; }
+      .doctors-page .grid.docs .doc-card h3 { font-size:15px; }
+      .doctors-page .grid.docs .doc-card .qual, .doctors-page .grid.docs .doc-card .facts { font-size:12px; }
+      .doctors-page .grid.docs .doc-card .btns { grid-template-columns:1fr; gap:6px; }
+      .search-bar input { min-width:0; width:100%; }
+      .search-bar .btn { flex:1; text-align:center; }
+      .grid.c3, .grid.c4 { grid-template-columns:1fr 1fr; }
+      main.inner table:not(.stack) { display:block; overflow-x:auto; white-space:nowrap; }
+      main.inner table.stack, main.inner table.stack tbody, main.inner table.stack tr, main.inner table.stack td { display:block; }
+      main.inner table.stack { border:0; background:none; }
+      main.inner table.stack tr.hrow, main.inner table.stack thead { display:none; }
+      main.inner table.stack tr { background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:12px; padding:6px 14px; box-shadow:0 2px 10px rgba(125,12,30,.05); }
+      main.inner table.stack td { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:9px 0; border-bottom:1px dashed var(--line); text-align:right; }
+      main.inner table.stack td:last-child { border-bottom:0; }
+      main.inner table.stack td::before { content:attr(data-label); flex:none; max-width:46%; text-align:left; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); }
+      main.inner table.stack td[data-label=""]::before { display:none; }
+      .card { padding:16px; }
+
+      /* footer on phones */
+      footer.site { padding:28px 0 0; }
+      footer.site .f-main { grid-template-columns:1fr; gap:18px; }
+      footer.site .f-brand { text-align:center; padding-bottom:20px; border-bottom:1px solid #ffffff1c; }
+      footer.site .f-brand .f-logo { justify-content:center; }
+      footer.site .f-brand p { max-width:none; margin:10px auto 14px; }
+      footer.site .f-sos { width:100%; justify-content:center; padding:11px 16px; }
+      footer.site .f-links nav { grid-template-columns:1fr 1fr; gap:0 18px; }
+      footer.site .f-links a { padding:9px 0; border-bottom:1px solid #ffffff12; font-size:14px; }
+      footer.site .f-contact .row, footer.site .f-contact a { padding:8px 0; }
+      footer.site .copy { flex-direction:column; align-items:center; text-align:center; gap:4px; margin-top:18px; }
+    }
+    @media (max-width:560px) {
+      .grid.c3, .grid.c4 { grid-template-columns:1fr; }
+      .dept-chips { grid-template-columns:repeat(2,1fr); gap:10px; }
+      .slide h1 { font-size:27px; }
+      .info-cards { margin-top:-20px; }
+    }
+    @media (max-width:360px) {
+      .doctors-page .grid.docs { grid-template-columns:1fr; }
+      .logo { font-size:16px; }
+    }
+
 
 
     /* ---- professional polish ---- */
@@ -400,10 +582,6 @@
     .stats-strip b { font-family:var(--font-head); font-size:34px; }
     .cta-band { padding:68px 20px; background:linear-gradient(120deg,#5a0a17,var(--brand) 70%,#d62839); }
     .cta-band h2 { font-size:34px; }
-    footer.site { background:linear-gradient(180deg,#2b0a10,#1b0509); padding-top:60px; }
-    footer.site .cols { grid-template-columns:1.6fr 1fr 1.2fr; gap:44px; }
-    footer.site h4 { font-size:16px; letter-spacing:.3px; margin-bottom:14px; }
-    footer.site a { transition:.2s; } footer.site a:hover { padding-left:4px; }
     .noimg { font-family:var(--font-head); }
 
     /* ---- cards fly in from different directions, then settle in place ---- */
@@ -428,10 +606,18 @@
       .grid.c3, .grid.c4, footer.site .cols, .finder, .info-grid, .checks, .intro-band, .info-cards, .counters .container { grid-template-columns:1fr; }
       .sl-arrow { display:none; }
     }
-    @media print { .topbar, header.site, footer.site, .no-print, .msgs { display:none !important; } main.inner { margin:0; } .card { box-shadow:none; border:0; } }
   </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+<symbol id="i-dept" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 8v6M9 11h6"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14c2.2.7 3.5 2.6 3.5 5"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</defs></svg>
 <div class="topbar"><div class="container">
   <span>&#9742; Emergency: <b>{{ hospital.emergency }}</b> &nbsp;|&nbsp; Reception: <b>{{ hospital.phone }}</b></span>
   <span>{{ hospital.hours }}</span>
@@ -439,69 +625,69 @@
 
 <header class="site"><div class="container">
   <a class="logo" href="{% url 'home' %}"><i>&#10010;</i> {{ hospital.name }}</a>
-  <nav class="main">
-    {% with page=request.resolver_match.url_name %}
-    <a href="{% url 'home' %}" {% if page == 'home' %}class="on"{% endif %}>Home</a>
-    <a href="{% url 'departments' %}" {% if page == 'departments' %}class="on"{% endif %}>Departments</a>
-    <a href="{% url 'doctors_public' %}" {% if page == 'doctors_public' %}class="on"{% endif %}>Our Doctors</a>
-    <a href="{% url 'about' %}" {% if page == 'about' %}class="on"{% endif %}>About Us</a>
-    <a href="{% url 'contact' %}" {% if page == 'contact' %}class="on"{% endif %}>Contact</a>
-    {% endwith %}
-  </nav>
-  <div class="head-actions">
-    {% if role == "patient" %}
-      <a class="btn small" href="{% url 'portal_book' %}">Book an Appointment</a>
-      <details class="account">
-        <summary><span class="avatar">{{ user.first_name|slice:":1"|default:user.username|slice:":1" }}</span> {{ user.first_name|default:user.username }} &#9662;</summary>
-        <div class="menu">
-          <a href="{% url 'portal_appointments' %}">My Appointments</a>
-          <a href="{% url 'portal_records' %}">Medical Records</a>
-          <a href="{% url 'portal_bills' %}">My Bills</a>
-          <a href="{% url 'portal_profile' %}">My Profile</a>
-          <hr>
-          <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Logout</button></form>
-        </div>
-      </details>
-    {% elif user.is_authenticated %}
-      {% if role %}<a class="btn small" href="{% url 'dashboard' %}">Dashboard</a>{% endif %}
-      <form method="post" action="{% url 'logout' %}" style="margin:0">{% csrf_token %}<button class="btn light small" type="submit">Logout</button></form>
-    {% else %}
-      <a class="btn light small" href="{% url 'login' %}">Login</a>
-      <a class="btn small" href="{% url 'register' %}">Book an Appointment</a>
-    {% endif %}
-  </div>
+  <nav class="main desk-only">{% include "site/_nav_links.html" %}</nav>
+  <div class="head-actions desk-only">{% include "site/_head_actions.html" %}</div>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </div></header>
+<div class="drawer-bg" id="drawerBg"></div>
+<div class="drawer" id="siteMenu" role="dialog" aria-label="Menu">
+  <div class="drawer-head">
+    <a class="logo" href="{% url 'home' %}"><i>&#10010;</i> {{ hospital.name }}</a>
+    <button class="drawer-close" id="drawerClose" type="button" aria-label="Close menu"><svg class="i" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="main">{% include "site/_nav_links.html" %}</nav>
+  <div class="head-actions">{% include "site/_head_actions.html" %}</div>
+</div>
 
 {% if messages %}<div class="msgs">{% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}</div>{% endif %}
 
 {% block page %}<main class="inner">{% block content %}{% endblock %}</main>{% endblock %}
 
+{% if request.resolver_match.url_name == 'home' %}
+{% if request.resolver_match.url_name == 'home' %}
 <footer class="site"><div class="container">
-  <div class="cols">
-    <div>
-      <h4>{{ hospital.name }}</h4>
+  <div class="f-main">
+    <div class="f-brand">
+      <a class="f-logo" href="{% url 'home' %}"><i>&#10010;</i> {{ hospital.name }}</a>
       <p>{{ hospital.tagline }}</p>
+      <a class="f-sos" href="tel:{{ hospital.emergency }}"><b>&#128657;</b> Emergency <em>{{ hospital.emergency }}</em> &middot; {{ hospital.hours }}</a>
     </div>
-    <div>
+    <div class="f-links">
       <h4>Quick links</h4>
-      <a href="{% url 'home' %}">Home</a>
-      <a href="{% url 'departments' %}">Departments</a>
-      <a href="{% url 'doctors_public' %}">Our Doctors</a>
-      <a href="{% url 'about' %}">About Us</a>
-      <a href="{% url 'contact' %}">Contact</a>
-      <a href="{{ book_url }}">Book an Appointment</a>
-      {% if not user.is_authenticated %}<a href="{% url 'login' %}">Patient Login</a>{% endif %}
+      <nav aria-label="Footer">
+        <a href="{% url 'home' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg> Home</a>
+        <a href="{% url 'departments' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg> Departments</a>
+        <a href="{% url 'doctors_public' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg> Our Doctors</a>
+        <a href="{% url 'about' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg> About Us</a>
+        <a href="{% url 'contact' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg> Contact</a>
+        <a href="{{ book_url }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg> Book Appointment</a>
+        {% if not user.is_authenticated %}<a href="{% url 'login' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg> Patient Login</a>{% endif %}
+      </nav>
     </div>
-    <div>
+    <div class="f-contact">
       <h4>Contact us</h4>
-      <p style="margin:0 0 6px">&#128205; {{ hospital.address }}</p>
-      <p style="margin:0 0 6px">&#9742; {{ hospital.phone }}</p>
-      <p style="margin:0 0 6px">&#9993; {{ hospital.email }}</p>
-      <p style="margin:0">&#128337; {{ hospital.hours }}</p>
+      <div class="row"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.7 7-11a7 7 0 10-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span class="t">{{ hospital.address }}</span></div>
+      <a href="tel:{{ hospital.phone }}"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></span><span class="t">{{ hospital.phone }}</span></a>
+      <a href="mailto:{{ hospital.email }}"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="t">{{ hospital.email }}</span></a>
     </div>
   </div>
-  <div class="copy">&copy; {% now "Y" %} {{ hospital.name }}. All rights reserved.</div>
+  <div class="copy"><span>&copy; {% now "Y" %} {{ hospital.name }}. All rights reserved.</span><span>Open 24/7 for emergencies</span></div>
 </div></footer>
+{% endif %}
+{% endif %}
+
+<!-- floating bottom nav (mobile) -->
+{% with page=request.resolver_match.url_name %}
+<nav class="bottom-nav no-print" aria-label="Quick navigation">
+  <a href="{% url 'home' %}" {% if page == 'home' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>Home</a>
+  <a href="{% url 'departments' %}" {% if page == 'departments' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-dept"/></svg>Depts</a>
+  <a class="book" href="{{ book_url }}"><span class="bk"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg></span>Book</a>
+  <a href="{% url 'doctors_public' %}" {% if page == 'doctors_public' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>Doctors</a>
+  <button type="button" id="bnMenu" aria-label="Open menu"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg>Menu</button>
+</nav>
+{% endwith %}
+
+
 
 <script>
 (function () {
@@ -509,7 +695,7 @@
   function onScroll() { if (hdr) hdr.classList.toggle("scrolled", window.scrollY > 8); }
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  if (window.innerWidth <= 860 || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
   // [x offset, y offset, rotation] : each card in a row starts from a different side
   var dirs = [[-170, 0, -8], [0, 150, 0], [170, 0, 8], [0, -120, 0], [-140, 120, -6], [140, 120, 6], [-140, -100, 6], [140, -100, -6]];
   // Only the home page stats cards fly in (the doctors section is a carousel).
@@ -537,13 +723,17 @@
 </script>
 
 <!-- Chatbot: answers from the hospital database -->
-<button class="cb-fab no-print" id="cbOpen" type="button" aria-label="Open chat assistant">&#128172; Ask us</button>
+<button class="cb-fab no-print" id="cbOpen" type="button" aria-label="Open chat assistant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 01-11.6 7.1L3 21l1.9-5.4A8 8 0 1121 12z"/></svg><span class="lbl">Ask us</span></button>
 <div class="cb-panel no-print" id="cbPanel" role="dialog" aria-label="Chat assistant">
-  <div class="cb-head"><div><b>{{ hospital.name }} Assistant</b><small>Departments, doctors, fees, booking{% if role == "patient" %} and your records{% endif %}</small></div><button class="cb-close" id="cbClose" type="button" aria-label="Close chat">&times;</button></div>
+  <div class="cb-head">
+    <div class="cb-avatar">&#129657;</div>
+    <div class="cb-title"><b>{{ hospital.name }} Assistant</b><small>Online &middot; replies instantly</small></div>
+    <button class="cb-close" id="cbClose" type="button" aria-label="Close chat">&times;</button>
+  </div>
   <div class="cb-body" id="cbBody"></div>
   <form class="cb-form" id="cbForm" autocomplete="off">{% csrf_token %}
-    <input type="text" id="cbInput" maxlength="300" placeholder="Type your question..." aria-label="Your question">
-    <button type="submit">Send</button>
+    <input type="text" id="cbInput" maxlength="300" placeholder="Ask about doctors, fees, booking..." aria-label="Your question">
+    <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
   </form>
 </div>
 <script>
@@ -563,21 +753,56 @@
   function send(text) {
     text = (text || "").trim(); if (!text) return;
     clearChips(); add(text, "me"); input.value = "";
-    var wait = add("...", "bot");
+    var wait = add("", "bot"); wait.classList.add("typing"); wait.innerHTML = "<i></i><i></i><i></i>";
     fetch("{% url 'chatbot' %}", { method: "POST", headers: { "Content-Type": "application/json", "X-CSRFToken": token }, body: JSON.stringify({ message: text }) })
       .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
-      .then(function (data) { wait.textContent = data.reply; extras(data); })
-      .catch(function () { wait.textContent = "Sorry, something went wrong. Please try again."; });
+      .then(function (data) { wait.classList.remove("typing"); wait.textContent = data.reply; extras(data); })
+      .catch(function () { wait.classList.remove("typing"); wait.textContent = "Sorry, something went wrong. Please try again."; });
   }
   function open() {
-    panel.classList.add("open"); input.focus();
+    panel.classList.add("open"); document.body.classList.add("cb-open"); if (window.innerWidth > 860) input.focus();
     if (!started) { started = true;
       add("Hello{% if role == "patient" %} {{ user.first_name|default:user.username|escapejs }}{% endif %}! I can answer questions about our departments, doctors, fees and timings{% if role == "patient" %}, and show your appointments and bills{% endif %}.", "bot");
       extras({ chips: ["Departments", "Doctors available today", "Book appointment", "Contact & timings"{% if role == "patient" %}, "My appointments", "My bills"{% endif %}] }); }
   }
-  document.getElementById("cbOpen").onclick = function () { panel.classList.contains("open") ? panel.classList.remove("open") : open(); };
-  document.getElementById("cbClose").onclick = function () { panel.classList.remove("open"); };
+  function close() { panel.classList.remove("open"); document.body.classList.remove("cb-open"); }
+  document.getElementById("cbOpen").onclick = function () { panel.classList.contains("open") ? close() : open(); };
+  document.getElementById("cbClose").onclick = close;
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
   form.addEventListener("submit", function (e) { e.preventDefault(); send(input.value); });
+})();
+</script>
+<script>
+(function () {
+  var body = document.body, btn = document.getElementById("menuToggle");
+  if (!btn) return;
+  function set(open) {
+    body.classList.toggle("menu-open", open);
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  btn.addEventListener("click", function () { set(true); });
+  var bn = document.getElementById("bnMenu"); if (bn) bn.addEventListener("click", function () { set(true); });
+  document.getElementById("drawerClose").addEventListener("click", function () { set(false); });
+  document.getElementById("drawerBg").addEventListener("click", function () { set(false); });
+  document.querySelectorAll("#siteMenu a").forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+  window.addEventListener("resize", function () { if (window.innerWidth > 860) set(false); });
+})();
+</script>
+<script>
+(function () {  /* label table cells so tables can turn into cards on phones */
+  document.querySelectorAll("main.inner table, .content table").forEach(function (t) {
+    if (t.classList.contains("mini")) return;
+    var rows = [].slice.call(t.querySelectorAll("tr")); if (!rows.length) return;
+    var head = t.querySelector("thead tr") || (rows[0].querySelector("th") && !rows[0].querySelector("td") ? rows[0] : null);
+    if (!head) return;
+    var labels = [].map.call(head.children, function (c) { return c.textContent.trim(); });
+    rows.forEach(function (r) {
+      if (r === head) { r.classList.add("hrow"); return; }
+      [].forEach.call(r.children, function (c, i) { if (c.tagName === "TD") c.setAttribute("data-label", c.colSpan > 1 ? "" : (labels[i] || "")); });
+    });
+    t.classList.add("stack");
+  });
 })();
 </script>
 </body>

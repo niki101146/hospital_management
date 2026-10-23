@@ -1,7 +1,5 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,7 +7,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-change-me-before-deploying")
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get("DJANGO_CSRF_ORIGINS", "").split(",") if o]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -55,7 +52,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "cityhospital_db"),
+        "NAME": os.environ.get("DB_NAME", "hospital_db"),
         "USER": os.environ.get("DB_USER", "postgres"),
         "PASSWORD": os.environ.get("DB_PASSWORD", ""),
         "HOST": os.environ.get("DB_HOST", "localhost"),
@@ -91,10 +88,10 @@ HOSPITAL = {
     "phone": "+91 9597856921",
     "emergency": "108",
     "email": "cityhospital@gmail.com",
-    "address": "123 Main Road, Your City, India",
-    "hours": "Sun - Sat: 8:00 AM - 8:00 PM",
+    "address": "Kanyakumari, Tamilnadu, India",
+    "hours": "Open 24/7",
     # Used on the About and Contact pages. Edit to match your hospital.
     "established": "2005",
     "beds": "150",
-    "map_query": "123 Main Road, Your City, India",  # address typed into the Google map on the Contact page
+    "map_query": "Kanyakumari, Tamilnadu, India",  # address typed into the Google map on the Contact page
 }

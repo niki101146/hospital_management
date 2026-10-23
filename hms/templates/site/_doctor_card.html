@@ -8,12 +8,12 @@
     <div class="dept">{{ d.department.name }}</div>
     <p class="qual">{{ d.specialization|default:"General practice" }}{% if d.qualification %} &middot; {{ d.qualification }}{% endif %}</p>
     <div class="facts">
-      {% if d.available_days %}<span>&#128197; {{ d.available_days }}</span>{% endif %}
-      <span>&#8377;{{ d.consultation_fee|floatformat:"0" }} fee</span>
+      <span class="fee">&#8377;{{ d.consultation_fee|floatformat:"0" }}</span>
+      {% if d.available_days %}<span class="days">&#128197; {{ d.available_days }}</span>{% endif %}
     </div>
     <div class="btns">
-      <a class="btn small" href="{{ book_url }}">Book an Appointment</a>
-      <a class="btn small light" href="{% url 'doctor_detail' d.pk %}">View Profile</a>
+      <a class="btn small" href="{{ book_url }}">Book</a>
+      <a class="btn small light" href="{% url 'doctor_detail' d.pk %}">Profile</a>
     </div>
   </div>
 </div>

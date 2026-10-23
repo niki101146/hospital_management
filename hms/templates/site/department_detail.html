@@ -1,7 +1,7 @@
 {% extends "site/base.html" %}{% load static %}
 {% block title %}{{ dept.name }}{% endblock %}
 {% block page %}
-<section class="page-hero ph2"><div class="container">
+<section class="page-hero mb-dept"><div class="container">
   <h1>{{ dept.symbol }} {{ dept.name }}</h1>
   <p>{{ dept.description|default:"Expert diagnosis and treatment by experienced specialists."|truncatechars:160 }}</p>
 </div></section>

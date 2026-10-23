@@ -1,7 +1,7 @@
 {% extends "site/base.html" %}{% load static %}
 {% block title %}{{ doctor }}{% endblock %}
 {% block page %}
-<section class="page-hero ph3"><div class="container">
+<section class="page-hero mb-docd"><div class="container">
   <h1>{{ doctor }}</h1><p>{{ doctor.specialization|default:doctor.department.name }}</p>
 </div></section>
 

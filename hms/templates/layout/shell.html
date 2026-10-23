@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
   <title>{% block title %}Dashboard{% endblock %} | {{ hospital.name }}</title>
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,19 +10,21 @@
   <style>
     :root { --brand:#b3122b; --brand-dark:#7d0c1e; --soft:#fdeef0; --bg:#f6f1f2; --line:#ece3e4; --text:#2a1f21; --muted:#74656a; --side:#2b0a10; }
     * { box-sizing:border-box; }
+    html { -webkit-text-size-adjust:100%; }
+    html, body { max-width:100%; overflow-x:clip; }
     body { margin:0; font-family:"Inter","Segoe UI",system-ui,-apple-system,Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
     a { color:var(--brand); }
     h1, h2, h3, .brand, .logo { font-family:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif; letter-spacing:-.01em; }
     .shell { display:grid; grid-template-columns:250px 1fr; min-height:100vh; }
-    aside { background:var(--side); color:#e8c4ca; padding:20px 14px; position:sticky; top:0; height:100vh; overflow:auto; }
-    aside .brand { display:flex; align-items:center; gap:10px; color:#fff; font-weight:800; font-size:18px; text-decoration:none; padding:4px 10px 18px; }
-    aside .brand i { font-style:normal; display:grid; place-items:center; width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,var(--brand),#d62839); }
-    aside small { display:block; padding:12px 12px 6px; font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:#b88c94; }
-    aside a.item { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:10px; color:#e8c4ca; text-decoration:none; font-size:15px; margin-bottom:2px; }
-    aside a.item:hover { background:#ffffff14; color:#fff; }
-    aside a.item.on { background:var(--brand); color:#fff; font-weight:600; }
-    aside .cnt { font-size:12px; background:#ffffff22; padding:1px 9px; border-radius:999px; }
-    aside a.item.new .cnt { background:#ffd1d6; color:var(--brand-dark); font-weight:700; }
+    #sidebar { background:var(--side); color:#e8c4ca; padding:20px 14px; position:sticky; top:0; height:100vh; overflow:auto; }
+    #sidebar .brand { display:flex; align-items:center; gap:10px; color:#fff; font-weight:800; font-size:18px; text-decoration:none; padding:4px 10px 18px; }
+    #sidebar .brand i { font-style:normal; display:grid; place-items:center; width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,var(--brand),#d62839); }
+    #sidebar small { display:block; padding:12px 12px 6px; font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:#b88c94; }
+    #sidebar a.item { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:10px; color:#e8c4ca; text-decoration:none; font-size:15px; margin-bottom:2px; }
+    #sidebar a.item:hover { background:#ffffff14; color:#fff; }
+    #sidebar a.item.on { background:var(--brand); color:#fff; font-weight:600; }
+    #sidebar .cnt { font-size:12px; background:#ffffff22; padding:1px 9px; border-radius:999px; }
+    #sidebar a.item.new .cnt { background:#ffd1d6; color:var(--brand-dark); font-weight:700; }
     .main { min-width:0; }
     .top { background:#fff; border-bottom:1px solid var(--line); padding:14px 28px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:5; }
     .top h1 { margin:0; font-size:22px; color:var(--brand-dark); }
@@ -95,29 +97,89 @@
     .errorlist { color:#b42318; list-style:none; padding:0; margin:0 0 6px; font-size:13px; }
     .helptext { color:var(--muted); font-size:12px; display:block; margin-top:4px; }
     main.content-wrap { max-width:1100px; }
-    @media print { aside, .top, .no-print, .msg { display:none !important; } .shell { display:block; } .content { padding:0; max-width:none; } body { background:#fff; } .card { box-shadow:none; border:0; } }
+    .pw { position:relative; }
+    .pw input { padding-right:48px !important; }
+    .pw-eye { position:absolute; right:6px; top:50%; transform:translateY(-50%); width:38px; height:38px; border:0; border-radius:50%; background:none; color:#8a767a; cursor:pointer; display:grid; place-items:center; }
+    .pw-eye:hover { color:var(--brand); background:var(--soft); }
+
+    .side-toggle, .side-close, .side-bg { display:none; }
+    .topact { display:contents; }
+    @media print { #sidebar, .top, .no-print, .msg { display:none !important; } .shell { display:block; } .content { padding:0; max-width:none; } body { background:#fff; } .card { box-shadow:none; border:0; } }
 
     @media (max-width:860px) {
-      .shell { grid-template-columns:1fr; } aside { position:static; height:auto; display:flex; flex-wrap:wrap; gap:4px; padding:12px; }
-      aside .brand { width:100%; padding-bottom:8px; } aside small { display:none; }
-      .fgrid { grid-template-columns:1fr; } .content, .top { padding-left:16px; padding-right:16px; }
-      table { display:block; overflow-x:auto; }
+      body.side-open { overflow:hidden; }
+      .shell { grid-template-columns:minmax(0,1fr); }
+      .main, .content { min-width:0; max-width:100vw; }
+      .content img, .content video, .content iframe { max-width:100%; height:auto; }
+      .content input, .content select, .content textarea { max-width:100%; }
+      .rb-search, .bl-search input, .toolbar input, .rb-filter .field, .rb-filter select, .rb-filter input { min-width:0 !important; width:100%; }
+      .rb-head, .bl-head, .rb-actions, .rb-filter, .bl-bar { flex-wrap:wrap; }
+      #sidebar { position:fixed; left:0; top:0; bottom:0; width:min(84vw,300px); height:auto; z-index:80; transform:translateX(-105%); visibility:hidden; transition:transform .3s cubic-bezier(.22,.8,.3,1), visibility .3s; box-shadow:20px 0 50px rgba(20,2,6,.35); padding:16px 12px 28px; }
+      body.side-open #sidebar { transform:none; visibility:visible; }
+      #sidebar .brand { padding:4px 8px 14px; }
+      #sidebar a.item { padding:12px 14px; font-size:15.5px; }
+      .side-close { display:grid; place-items:center; position:absolute; right:10px; top:14px; width:36px; height:36px; border-radius:50%; border:0; background:#ffffff1c; color:#fff; font-size:22px; cursor:pointer; }
+      .side-bg { display:block; position:fixed; inset:0; background:rgba(20,2,6,.55); z-index:70; opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; }
+      body.side-open .side-bg { opacity:1; visibility:visible; }
+      .side-toggle { display:grid; place-items:center; flex:none; width:42px; height:42px; border:1px solid var(--line); border-radius:12px; background:#fff; color:var(--brand-dark); cursor:pointer; }
+      .top { padding:10px 14px; flex-wrap:wrap; gap:10px; }
+      .top .lead { display:flex; align-items:center; gap:12px; min-width:0; flex:1; }
+      .top h1 { font-size:19px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .top .hint, .top .right .muted { display:none; }
+      .top .right { display:contents; }
+      .top .right form { order:2; flex:none; }
+      .topact { order:3; width:100%; display:flex; gap:8px; }
+      .topact:not(:has(*)) { display:none; }
+      .topact .btn { flex:1; text-align:center; padding:11px 14px; }
+      .content, .top { padding-left:14px; padding-right:14px; }
+      .content { padding-top:18px; padding-bottom:40px; }
+      .content h1 { font-size:22px; }
+      .fgrid { grid-template-columns:1fr; }
+      .stats { grid-template-columns:repeat(2,1fr); gap:12px; }
+      .stat { padding:14px 16px; } .stat b { font-size:26px; }
+      .card { padding:16px; border-radius:14px; }
+      .toolbar { flex-direction:column; align-items:stretch; }
+      .toolbar form { width:100%; } .toolbar input[type=search], .toolbar input[type=text] { min-width:0; flex:1; width:100%; }
+      .quick .btn { flex:1 1 140px; text-align:center; }
+      .formbar { flex-direction:column; } .formbar .btn { text-align:center; }
+      .upload { flex-direction:column; align-items:flex-start; }
+      dl.kv { grid-template-columns:100px 1fr; }
+      table:not(.stack) { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap; }
+      table.stack, table.stack tbody, table.stack tr, table.stack td { display:block; }
+      table.stack { border:0; background:none; border-radius:0; }
+      table.stack thead, table.stack tr.hrow { display:none; }
+      table.stack tr { background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:12px; padding:6px 14px; box-shadow:0 2px 10px rgba(125,12,30,.05); }
+      table.stack tr:hover td { background:none; }
+      table.stack td { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:9px 0; border-bottom:1px dashed var(--line); text-align:right; white-space:normal; word-break:break-word; font-size:14.5px; }
+      table.stack td:last-child { border-bottom:0; }
+      table.stack td::before { content:attr(data-label); flex:none; max-width:46%; text-align:left; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); }
+      table.stack td[data-label=""]::before { display:none; }
+      table.stack td:has(.actions), table.stack td.actions { justify-content:flex-end; padding-top:12px; }
+      table.stack td .actions { width:100%; justify-content:flex-end; }
+      table.stack td .actions .btn, table.stack td.actions .btn { flex:1; text-align:center; padding:9px 12px; }
+      table.stack .thumb, table.stack .thumb-ph { margin-left:auto; }
+      .btn { padding:10px 18px; }
     }
   </style>
 </head>
 <body>
+<div class="side-bg" id="sideBg"></div>
 <div class="shell">
-  <aside>
+  <aside id="sidebar">
+    <button class="side-close" id="sideClose" type="button" aria-label="Close menu">&times;</button>
 {% block sidebar %}{% endblock %}
   </aside>
   <div class="main">
     <div class="top">
-      <div>
-        <h1>{% block heading %}{{ hospital.name }}{% endblock %}</h1>
-        {% block subhint %}<div class="hint">{% now "l, d F Y" %}</div>{% endblock %}
+      <div class="lead">
+        <button class="side-toggle" id="sideToggle" type="button" aria-label="Open menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <div style="min-width:0">
+          <h1>{% block heading %}{{ hospital.name }}{% endblock %}</h1>
+          {% block subhint %}<div class="hint">{% now "l, d F Y" %}</div>{% endblock %}
+        </div>
       </div>
       <div class="right">
-        {% block topactions %}{% endblock %}
+        <div class="topact">{% block topactions %}{% endblock %}</div>
         <span class="muted">{{ user.get_full_name|default:user.username }}</span>
         <form method="post" action="{% url 'logout' %}" style="margin:0">{% csrf_token %}<button class="btn light small" type="submit">Logout</button></form>
       </div>
@@ -128,5 +190,50 @@
     </div>
   </div>
 </div>
+<script>
+(function () {
+  var b = document.body, t = document.getElementById("sideToggle");
+  if (!t) return;
+  function set(o) { b.classList.toggle("side-open", o); t.setAttribute("aria-expanded", o ? "true" : "false"); }
+  t.addEventListener("click", function () { set(true); });
+  document.getElementById("sideClose").addEventListener("click", function () { set(false); });
+  document.getElementById("sideBg").addEventListener("click", function () { set(false); });
+  document.querySelectorAll("#sidebar a.item").forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+  window.addEventListener("resize", function () { if (window.innerWidth > 860) set(false); });
+})();
+</script>
+<script>
+(function () {
+  var eye = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+      off = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.6 10.6 0 0112 19C5.5 19 1.5 12 1.5 12a18.5 18.5 0 015.1-5.9M9.9 5.2A10 10 0 0112 5c6.5 0 10.5 7 10.5 7a18.6 18.6 0 01-2.2 3.2M1 1l22 22"/><path d="M9.9 9.9a3 3 0 004.2 4.2"/></svg>';
+  document.querySelectorAll("input[type=password]").forEach(function (inp) {
+    var w = document.createElement("div"); w.className = "pw";
+    inp.parentNode.insertBefore(w, inp); w.appendChild(inp);
+    var b = document.createElement("button"); b.type = "button"; b.className = "pw-eye"; b.setAttribute("aria-label", "Show password"); b.innerHTML = eye;
+    b.addEventListener("click", function () {
+      var show = inp.type === "password"; inp.type = show ? "text" : "password";
+      b.innerHTML = show ? off : eye; b.setAttribute("aria-label", show ? "Hide password" : "Show password"); inp.focus();
+    });
+    w.appendChild(b);
+  });
+})();
+</script>
+<script>
+(function () {  /* label table cells so tables can turn into cards on phones */
+  document.querySelectorAll(".content table").forEach(function (t) {
+    if (t.classList.contains("mini")) return;
+    var rows = [].slice.call(t.querySelectorAll("tr")); if (!rows.length) return;
+    var head = t.querySelector("thead tr") || (rows[0].querySelector("th") && !rows[0].querySelector("td") ? rows[0] : null);
+    if (!head) return;
+    var labels = [].map.call(head.children, function (c) { return c.textContent.trim(); });
+    rows.forEach(function (r) {
+      if (r === head) { r.classList.add("hrow"); return; }
+      [].forEach.call(r.children, function (c, i) { if (c.tagName === "TD") c.setAttribute("data-label", c.colSpan > 1 ? "" : (labels[i] || "")); });
+    });
+    t.classList.add("stack");
+  });
+})();
+</script>
 </body>
 </html>

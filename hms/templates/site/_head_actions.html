@@ -1,0 +1,20 @@
+{% if role == "patient" %}
+  <a class="btn small" href="{% url 'portal_book' %}">Book an Appointment</a>
+  <details class="account">
+    <summary><span class="avatar">{{ user.first_name|slice:":1"|default:user.username|slice:":1" }}</span> {{ user.first_name|default:user.username }} &#9662;</summary>
+    <div class="menu">
+      <a href="{% url 'portal_appointments' %}">My Appointments</a>
+      <a href="{% url 'portal_records' %}">Medical Records</a>
+      <a href="{% url 'portal_bills' %}">My Bills</a>
+      <a href="{% url 'portal_profile' %}">My Profile</a>
+      <hr>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Logout</button></form>
+    </div>
+  </details>
+{% elif user.is_authenticated %}
+  {% if role %}<a class="btn small" href="{% url 'dashboard' %}">Dashboard</a>{% endif %}
+  <form method="post" action="{% url 'logout' %}" style="margin:0">{% csrf_token %}<button class="btn light small" type="submit">Logout</button></form>
+{% else %}
+  <a class="btn light small" href="{% url 'login' %}">Login</a>
+  <a class="btn small" href="{% url 'register' %}">Book an Appointment</a>
+{% endif %}

@@ -2,24 +2,24 @@
 {% load static %}
 {% block title %}Our Doctors{% endblock %}
 {% block page %}
-<section class="page-hero my-banner mb-doc"><div class="container">
-  <h1>Our Doctors</h1><p>Choose a specialist and book your visit online.</p>
+<section class="page-hero mb-doc"><div class="container">
+  <h1>Our Doctors</h1>
 </div></section>
-<section class="block alt" style="min-height:50vh"><div class="container">
+<section class="block alt doctors-page" style="min-height:50vh;padding:34px 0 50px"><div class="container">
   <form class="search-bar" method="get">
-    <input type="text" name="q" value="{{ q }}" placeholder="Search by name or speciality" aria-label="Search doctors">
+    <input type="text" name="q" value="{{ q }}" placeholder="Name or speciality" aria-label="Search doctors">
     {% if dept %}<input type="hidden" name="dept" value="{{ dept }}">{% endif %}
     <button class="btn" type="submit">Search</button>
     {% if q %}<a class="btn light" href="{% url 'home' %}">Clear</a>{% endif %}
   </form>
-  <div style="margin-bottom:26px">
+  <div style="margin-bottom:14px">
     <a class="pill {% if not dept %}on{% endif %}" href="{% url 'doctors_public' %}{% if q %}?q={{ q|urlencode }}{% endif %}">All</a>
     {% for d in departments %}<a class="pill {% if dept == d.pk|stringformat:'s' %}on{% endif %}" href="?dept={{ d.pk }}{% if q %}&q={{ q|urlencode }}{% endif %}">{{ d.name }}</a>{% endfor %}
   </div>
-  <p class="muted" style="margin:-10px 0 18px">{{ doctors|length }} doctor{{ doctors|length|pluralize }} found</p>
+  <p class="muted" style="margin:0 0 14px">{{ doctors|length }} doctor{{ doctors|length|pluralize }} found</p>
   <div class="grid docs">
     {% for d in doctors %}{% include "site/_doctor_card.html" %}
-    {% empty %}<p class="muted">No doctors found. Try a different search or department.</p>{% endfor %}
+    {% empty %}<p class="muted">No doctors found.</p>{% endfor %}
   </div>
 </div></section>
 {% endblock %}

@@ -1,6 +1,23 @@
 {% extends "site/base.html" %}
 {% block title %}Home{% endblock %}
 {% block page %}
+<style>
+  /* home page: tighter spacing */
+  .page-home section.block{padding:44px 0}
+  .page-home .sec-head{margin-bottom:22px}
+  .page-home .sec-head h2{margin:8px 0 6px}
+  .page-home .sec-head h2::after{margin-top:10px}
+  .page-home .center{margin-top:18px}
+  .page-home .stats-strip .container{padding-top:16px;padding-bottom:16px}
+  .page-home .stats-strip .container>div{padding:12px 10px}
+  .page-home .docs.lg.dcar{padding:12px 0 4px}
+  .page-home .dcar-nav{margin-top:14px}
+  .page-home .tile{padding:20px}
+  .page-home .tile h3{margin:10px 0 4px}
+  .page-home .emergency-band .container{padding-top:18px;padding-bottom:18px}
+  .page-home .finder-wrap{margin-bottom:0}
+</style>
+<div class="page-home">
 
 <section class="slider" id="hero" aria-roledescription="carousel" aria-label="Highlights">
   <div class="slides">
@@ -20,8 +37,8 @@
     {% empty %}
     <div class="slide t0 active">
       <div class="container">
-        <span class="eyebrow">&#10010; Trusted healthcare, close to home</span>
-        <h1>Your health, in <br>caring hands.</h1>
+        <span class="eyebrow">&#10010; Trusted healthcare</span>
+        <h1>Your health, in caring hands.</h1>
         <p class="lead">{{ hospital.tagline }}</p>
         <div class="cta">
           <a class="btn white" href="{{ book_url }}">Book an Appointment</a>
@@ -41,7 +58,7 @@
 <div class="finder-wrap"><div class="container">
   <form class="finder" action="{% url 'doctors_public' %}" method="get">
     <b>&#9877; Find a doctor</b>
-    <input type="text" name="q" placeholder="Doctor name or speciality" aria-label="Doctor name or speciality">
+    <input type="text" name="q" placeholder="Name or speciality" aria-label="Doctor name or speciality">
     <select name="dept" aria-label="Department">
       <option value="">All departments</option>
       {% for d in finder_departments %}<option value="{{ d.pk }}">{{ d.name }}</option>{% endfor %}
@@ -51,42 +68,42 @@
 </div></div>
 
 {% if role == "patient" %}
-<div class="welcome-strip" style="margin-top:26px"><div class="container">
-  <b>Welcome back, {{ user.first_name|default:user.username }}.</b>
-  {% for a in upcoming %}<span>&#128197; {{ a.date|date:"D, d M" }} at {{ a.time|time:"h:i A" }} with {{ a.doctor }}</span>{% empty %}<span class="muted">You have no upcoming appointments.</span>{% endfor %}
+<div class="welcome-strip" style="margin-top:14px"><div class="container">
+  <b>Welcome, {{ user.first_name|default:user.username }}.</b>
+  {% for a in upcoming %}<span>&#128197; {{ a.date|date:"D, d M" }} at {{ a.time|time:"h:i A" }} with {{ a.doctor }}</span>{% empty %}<span class="muted">No upcoming appointments.</span>{% endfor %}
   <span class="actions" style="margin-left:auto">
-    <a class="btn small" href="{% url 'portal_book' %}">Book an Appointment</a>
+    <a class="btn small" href="{% url 'portal_book' %}">Book</a>
     <a class="btn small light" href="{% url 'portal_appointments' %}">My appointments</a>
   </span>
 </div></div>
 {% endif %}
 
-<section class="stats-strip" style="margin-top:16px"><div class="container">
-  <div><b>{{ doctor_total }}+</b><span>Specialist doctors</span></div>
+<section class="stats-strip"><div class="container">
+  <div><b>{{ doctor_total }}+</b><span>Doctors</span></div>
   <div><b>{{ department_total }}</b><span>Departments</span></div>
-  <div><b>{{ patient_total }}+</b><span>Registered patients</span></div>
-  <div><b>24/7</b><span>Emergency care</span></div>
+  <div><b>{{ patient_total }}+</b><span>Patients</span></div>
+  <div><b>24/7</b><span>Emergency</span></div>
 </div></section>
 
 <section class="block alt dept-section"><div class="container">
-  <div class="sec-head"><small>Our specialities</small><h2>Departments &amp; centres of care</h2><p>Select a department to see its doctors.</p></div>
+  <div class="sec-head"><small>Specialities</small><h2>Our Departments</h2></div>
   <div class="dept-chips">
     {% for d in departments %}
     <a class="dept-chip" href="{% url 'doctors_public' %}?dept={{ d.pk }}" title="View doctors in {{ d.name }}">
       <span class="icon">{{ d.symbol }}</span>
       <span class="nm">{{ d.name }}</span>
     </a>
-    {% empty %}<p class="muted">Departments will appear here once they are added in the Website Manager.</p>{% endfor %}
+    {% empty %}<p class="muted">No departments added yet.</p>{% endfor %}
   </div>
-  {% if department_total > 8 %}<div class="center"><a class="btn light" href="{% url 'departments' %}">View all {{ department_total }} departments</a></div>{% endif %}
+  {% if department_total > 8 %}<div class="center"><a class="btn light" href="{% url 'departments' %}">View all departments</a></div>{% endif %}
 </div></section>
 
 <section class="block"><div class="container">
-  <div class="sec-head"><small>Meet the team</small><h2>Our specialist doctors</h2><p>Experienced, qualified and committed to your recovery.</p></div>
+  <div class="sec-head"><small>Our team</small><h2>Our Doctors</h2></div>
   <div class="docs lg dcar" id="dcar">
     <div class="dcar-track">
       {% for d in doctors %}<div class="dslide">{% include "site/_doctor_card.html" %}</div>
-      {% empty %}<p class="muted" style="padding:0 20px">Doctors will appear here once they are added from the Website Manager.</p>{% endfor %}
+      {% empty %}<p class="muted" style="padding:0 20px">No doctors added yet.</p>{% endfor %}
     </div>
   </div>
   {% if doctors|length > 1 %}
@@ -100,27 +117,27 @@
 </div></section>
 
 <section class="block alt"><div class="container">
-  <div class="sec-head"><small>Why choose us</small><h2>Care you can trust</h2></div>
+  <div class="sec-head"><small>Why us</small><h2>Care you can trust</h2></div>
   <div class="grid c4">
-    <div class="tile"><div class="icon">&#9877;</div><h3>Experienced doctors</h3><p>Qualified specialists focused on your recovery.</p></div>
-    <div class="tile"><div class="icon">&#128337;</div><h3>Easy online booking</h3><p>Pick a slot in under a minute, any time of day.</p></div>
-    <div class="tile"><div class="icon">&#128196;</div><h3>Digital records</h3><p>See prescriptions, reports and bills online.</p></div>
-    <div class="tile"><div class="icon">&#128657;</div><h3>24/7 emergency</h3><p>Round-the-clock emergency support: {{ hospital.emergency }}.</p></div>
+    <div class="tile"><div class="icon">&#9877;</div><h3>Expert doctors</h3><p>Qualified specialists.</p></div>
+    <div class="tile"><div class="icon">&#128337;</div><h3>Easy booking</h3><p>Pick a slot in a minute.</p></div>
+    <div class="tile"><div class="icon">&#128196;</div><h3>Digital records</h3><p>Prescriptions, reports, bills.</p></div>
+    <div class="tile"><div class="icon">&#128657;</div><h3>24/7 emergency</h3><p>{{ hospital.emergency }}</p></div>
   </div>
 </div></section>
 
 <section class="block"><div class="container">
-  <div class="sec-head"><small>How it works</small><h2>Book in 3 easy steps</h2></div>
+  <div class="sec-head"><small>How it works</small><h2>Book in 3 steps</h2></div>
   <div class="grid c3">
-    <div class="step"><div class="num">1</div><h3>Create your account</h3><p class="muted">Register free as a patient in under a minute.</p></div>
-    <div class="step"><div class="num">2</div><h3>Choose doctor &amp; time</h3><p class="muted">Pick a department, a specialist, a date and a slot.</p></div>
-    <div class="step"><div class="num">3</div><h3>Visit &amp; get your records</h3><p class="muted">Prescriptions and bills appear in your account.</p></div>
+    <div class="step"><div class="num">1</div><h3>Create account</h3><p class="muted">Register free in a minute.</p></div>
+    <div class="step"><div class="num">2</div><h3>Choose doctor &amp; time</h3><p class="muted">Pick a doctor, date and slot.</p></div>
+    <div class="step"><div class="num">3</div><h3>Visit &amp; get records</h3><p class="muted">Prescriptions and bills go to your account.</p></div>
   </div>
 </div></section>
 
 {% if testimonials %}
 <section class="block alt"><div class="container">
-  <div class="sec-head"><small>Patient stories</small><h2>What our patients say</h2></div>
+  <div class="sec-head"><small>Reviews</small><h2>What patients say</h2></div>
   <div class="grid c3">
     {% for t in testimonials %}
     <div class="tile quote">
@@ -134,11 +151,12 @@
 {% endif %}
 
 <section class="emergency-band"><div class="container">
-  <div><b>Medical emergency?</b><br><span style="color:#e8c4ca">Our emergency team is available day and night.</span></div>
-  <div class="num-wrap">&#128657; Call <b class="num">{{ hospital.emergency }}</b></div>
+  <div><b>Medical emergency?</b></div>
+  <div class="num-wrap">&#128657; <b class="num">{{ hospital.emergency }}</b></div>
   <a class="btn white" href="{{ book_url }}">Book an Appointment</a>
 </div></section>
 
+</div>
 <script>
 (function () {
   var car = document.getElementById("dcar");

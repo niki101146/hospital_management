@@ -1,0 +1,7 @@
+{% with page=request.resolver_match.url_name %}
+<a href="{% url 'home' %}" {% if page == 'home' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>Home</a>
+<a href="{% url 'departments' %}" {% if page == 'departments' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-dept"/></svg>Departments</a>
+<a href="{% url 'doctors_public' %}" {% if page == 'doctors_public' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>Our Doctors</a>
+<a href="{% url 'about' %}" {% if page == 'about' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-info"/></svg>About Us</a>
+<a href="{% url 'contact' %}" {% if page == 'contact' %}class="on"{% endif %}><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>Contact</a>
+{% endwith %}

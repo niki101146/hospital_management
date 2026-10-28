@@ -644,7 +644,6 @@
 {% block page %}<main class="inner">{% block content %}{% endblock %}</main>{% endblock %}
 
 {% if request.resolver_match.url_name == 'home' %}
-{% if request.resolver_match.url_name == 'home' %}
 <footer class="site"><div class="container">
   <div class="f-main">
     <div class="f-brand">
@@ -673,7 +672,6 @@
   </div>
   <div class="copy"><span>&copy; {% now "Y" %} {{ hospital.name }}. All rights reserved.</span><span>Open 24/7 for emergencies</span></div>
 </div></footer>
-{% endif %}
 {% endif %}
 
 <!-- floating bottom nav (mobile) -->
